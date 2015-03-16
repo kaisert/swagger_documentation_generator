@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="swagger_documentation_generation" uuid="36AD57D6-8C8E-49EE-8F50-8C02347F6118">
+	<target name="swagger_documentation_generation">
+		<root class="APPLICATION" feature="make"/>
+		<option warning="true" void_safety="none">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<precompile name="base_pre" location="$ISE_PRECOMP\base-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="environment" location="\home\tobias\i_ti_eytsch\eiffel\svn\15.01_dev\framework\environment\environment.ecf"/>
+		<library name="file_utilities" location="\home\tobias\i_ti_eytsch\eiffel\svn\15.01_dev\framework\file_utilities\file_utilities.ecf"/>
+		<library name="parser" location="\home\tobias\i_ti_eytsch\eiffel\svn\15.01_dev\framework\parser\parser.ecf"/>
+		<cluster name="swagger_documentation_generation" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/CVS$</exclude>
+				<exclude>/.svn$</exclude>
+			</file_rule>
+			<file_rule>
+				<exclude>^doc_generator$</exclude>
+			</file_rule>
+			<file_rule>
+				<exclude>^doc_generator$</exclude>
+			</file_rule>
+			<file_rule>
+				<exclude>^doc_generator$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>
