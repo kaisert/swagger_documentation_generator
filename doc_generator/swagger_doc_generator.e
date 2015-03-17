@@ -8,14 +8,15 @@ class
 	SWAGGER_DOC_GENERATOR
 inherit
 	STRING_HANDLER
-	
+
 create
 	make
 
 feature
 	parser: EIFFEL_PARSER
 	factory: AST_ROUNDTRIP_FACTORY
-	visitor: INDEXING_NOTES_VISITOR
+	swagger_object_creator: SWAGGER_OBJECT_CREATOR
+	json_creator: JSON_GENERATOR
 
 feature
 	make
@@ -30,7 +31,8 @@ feature {NONE}
 	do
 		create factory
 		create parser.make_with_factory (factory)
-		create visitor
+		create swagger_object_creator.make
+		create json_creator.make
 		parser.set_il_parser
 		parser.set_syntax_version (parser.transitional_syntax)
 	end
@@ -72,6 +74,8 @@ feature {NONE}
 		end
 	end
 
+feature {NONE}
+	swagger_object: SWAGGER_OBJECT
 
 feature
 
@@ -84,11 +88,15 @@ feature
 	do
 		create current_file.make_with_path (create {PATH}.make_from_string (path))
 		current_file.open_read
+		if current_file.is_open_read then
+			io.putstring ("is readable%N")
+		end
 		parser.parse_class_from_file (current_file, Void, Void)
 		if parser.error_count = 0 then
 			io.putstring ("success")
-			visitor.set_match_list (parser.match_list)
-			--visitor.process_class_as (parser.root_node)
+			swagger_object_creator.process_class_as (parser.root_node)
+			json_creator.process_swagger_object (swagger_object_creator.swagger_object)
+			io.putstring ("done")
 		else
 			io.putstring ("error")
 		end

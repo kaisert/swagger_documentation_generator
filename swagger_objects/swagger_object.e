@@ -71,6 +71,11 @@ feature
 			end
 			schemes.extend (a_scheme)
 		end
+	set_scheme(schemes_list: LINKED_LIST[STRING])
+		--sets the schemes
+		do
+			schemes := schemes_list
+		end
 
 	add_consume(a_consume: STRING)
 		-- adds a MIME type of what the API consumes
@@ -80,6 +85,10 @@ feature
 			end
 			consumes.extend (a_consume)
 		end
+	set_consumes(consumes_list: LINKED_LIST[STRING])
+		do
+			consumes := consumes_list
+		end
 
 	add_produce(a_produce: STRING)
 		-- add a MIME type of what the API produces
@@ -88,6 +97,10 @@ feature
 				create produces.make
 			end
 			produces.extend (a_produce)
+		end
+	set_produces(produce_list: LINKED_LIST[STRING])
+		do
+			produces := produce_list
 		end
 
 	set_definitions(a_definitions: DEFINITIONS_OBJECT)

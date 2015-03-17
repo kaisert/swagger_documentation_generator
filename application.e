@@ -18,7 +18,7 @@ feature {NONE} -- Initialization
 			-- Run application.
 		do
 			create doc_generator.make
-			doc_generator.create_documentation_from_file ("/home/tobias/graph/node.e")
+			doc_generator.create_documentation_from_file ("./test/test_class.e")
 		end
 
 feature

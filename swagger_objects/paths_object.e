@@ -15,15 +15,16 @@ feature
 		--initialize new instance
 		do
 			initialize
+			create paths.make
 		end
 
 feature
-	path: PATH_ITEM_OBJECT
+	paths: LINKED_LIST[PATH_ITEM_OBJECT]
 
-	set_path(a_path: PATH_ITEM_OBJECT)
+	add_path(a_path: PATH_ITEM_OBJECT)
 		-- sets the path
 		do
-			path := a_path
+			paths.extend(a_path)
 		end
 
 feature --visitor
