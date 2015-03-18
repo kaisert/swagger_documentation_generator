@@ -8,14 +8,23 @@ class
 	PATHS_OBJECT_CREATOR
 inherit
 	INDEXING_NOTES_VISITOR
+create
+	make
 feature {NONE}
+	class_indexes_handled: BOOLEAN
 
+feature
+	make
+		-- initializes a new instance
+		do
+			class_indexes_handled := false
+		end
 
 feature
 	reset
 		-- resets the visitor
 		do
-
+			class_indexes_handled := false
 		end
 
 feature

@@ -113,7 +113,7 @@ feature
 			end
 		end
 		io.putstring ("starting to scan classes for swagger annotations%N")
-		swagger_object_creator.process_class_as (parser.root_node)
+		swagger_object_creator.create_swagger_object (classes)
 		io.putstring ("creating JSON file%N")
 		json_creator.process_swagger_object (swagger_object_creator.swagger_object)
 		io.putstring ("done")

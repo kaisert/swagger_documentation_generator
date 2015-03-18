@@ -15,7 +15,7 @@ feature
 		--initializes a new instance
 		do
 			create info_visitor
-			create paths_visitor
+			create paths_visitor.make
 		end
 feature {NONE}
 	info_visitor: INFO_OBJECT_CREATOR
@@ -46,6 +46,8 @@ feature
 			loop
 				c.item.process (paths_visitor)
 			end
+			create paths.make
+			create swagger_object.make (swagger, info_visitor.info, paths)
 		end
 
 feature
@@ -79,8 +81,6 @@ feature
 				swagger := extract_swagger_spec(l_as)
 			elseif l_as.tag.name_32.same_string ("sa_info") then
 				current_class.process (info_visitor)
-				create paths.make
-				create swagger_object.make (swagger, info_visitor.info, paths)
 			end
 		end
 end

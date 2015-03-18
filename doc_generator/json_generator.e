@@ -176,11 +176,15 @@ feature
 			comma_required: BOOLEAN
 		do
 			if attached w_o.name as n then
-				i_output("%"name%": %""); output(n); output("%"")
 				output_nl
+				i_output("%"name%": %""); output(n); output("%"")
 				comma_required := true
 			end
 			if attached w_o.url as u then
+				if comma_required then
+					output(",")
+				end
+				output_nl
 				i_output("%"url%": %""); output(u); output("%"")
 				output_nl
 			end
