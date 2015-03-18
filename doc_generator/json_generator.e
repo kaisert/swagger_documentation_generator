@@ -47,6 +47,31 @@ feature{NONE}
 		do
 			output("%N")
 		end
+	output_parameter(para, value: STRING)
+		-- writes a string of the form
+		-- "para": "value"
+		do
+			i_output ("%"" + para + "%": %"" + value + "%"")
+		end
+
+	output_list(para: STRING; array: LINKED_LIST[STRING])
+		local
+			array_string: STRING
+		do
+			array_string := ""
+			i_output("%"" + para + "%": [")
+			output_nl
+			add_intent
+			across array as a
+			loop
+				array_string := array_string + "%"" + a.item + "%", "
+			end
+			array_string.remove_tail (2)
+			i_output(array_string)
+			remove_intent
+			output_nl
+			i_output("]")
+		end
 feature
 	make
 		--initializes a new instance
@@ -57,7 +82,32 @@ feature
 	--visitor
 	process_contact_object(w_o: CONTACT_OBJECT)
 		-- process an object of type CONTACT_OBJECT
+		local
+			comma_required: BOOLEAN
 		do
+			output_nl
+			comma_required := false
+			if attached w_o.name as n then
+				i_output ("%"name%": %"")
+				output(w_o.name); output("%"");
+				comma_required := true
+			end
+			if attached w_o.url as u then
+				if comma_required then
+					output(",")
+				end
+				output_nl
+				i_output ("%"url%": %""); output(w_o.url); output("%"")
+				comma_required := true
+			end
+			if attached w_o.email as e then
+				if comma_required then
+					output(",")
+				end
+				output_nl
+				i_output ("%"email%": %""); output(w_o.email); output("%"")
+			end
+			output_nl
 		end
 
 	process_definitions_object(w_o: DEFINITIONS_OBJECT)
@@ -88,18 +138,29 @@ feature
 	process_info_object(w_o: INFO_OBJECT)
 		-- process an object of type INFO_OBJECT
 		do
-			i_output("%"info%": {")
+			output("{")
 			output_nl
 			add_intent
-			i_output("%"version%": %"")
-			output(w_o.version)
-			output("%",")
+			i_output("%"version%": %""); output(w_o.version); output("%",")
 			output_nl
-			i_output("%"title%": %"")
-			output(w_o.title)
-			output("%"")
-			output_nl
-			remove_intent
+			i_output("%"title%": %""); output(w_o.title); output("%"")
+			if attached w_o.contact as c then
+				output(","); output_nl
+				i_output ("%"contact%": {")
+				add_intent
+				c.process (current)
+				remove_intent
+				i_output("}")
+			end
+			if attached w_o.license as l then
+				output(","); output_nl
+				i_output ("%"license%": {")
+				add_intent
+				l.process (current)
+				remove_intent
+				i_output ("}")
+			end
+			output_nl; remove_intent
 			i_output("},")
 			output_nl
 		end
@@ -111,7 +172,18 @@ feature
 
 	process_license_object(w_o: LICENSE_OBJECT)
 		-- process an object of type LICENSE_OBJECT
+		local
+			comma_required: BOOLEAN
 		do
+			if attached w_o.name as n then
+				i_output("%"name%": %""); output(n); output("%"")
+				output_nl
+				comma_required := true
+			end
+			if attached w_o.url as u then
+				i_output("%"url%": %""); output(u); output("%"")
+				output_nl
+			end
 		end
 
 	process_operation_object(w_o: OPERATION_OBJECT)
@@ -207,10 +279,102 @@ feature
 			output(w_o.swagger)
 			output("%",")
 			output_nl
+			i_output("%"info%": ")
 			w_o.info.process (current)
 			w_o.paths.process (current)
+			if attached w_o.host as h then
+				output(","); output_nl
+				output_parameter ("host", h)
+			end
+			if attached w_o.base_path as bp then
+				output(","); output_nl
+				output_parameter ("basePath", bp)
+			end
+			if attached w_o.schemes as s then
+				output(","); output_nl
+				output_list ("schemes", s)
+			end
+			if attached w_o.consumes as c then
+				output(","); output_nl
+				output_list ("consumes", c)
+			end
+			if attached w_o.produces as p then
+				output(","); output_nl
+				output_list ("produces", p)
+			end
+			if attached w_o.definitions as d then
+				output(","); output_nl
+				i_output ("%"definitions%": {")
+				output_nl
+				add_intent
+				d.process (current)
+				remove_intent
+				i_output("}")
+			end
+			if attached w_o.parameters as p then
+				output(","); output_nl
+				i_output ("%"parameters%": {")
+				output_nl
+				add_intent
+				p.process (current)
+				remove_intent
+				i_output("}")
+			end
+			if attached w_o.responses as r then
+				output(","); output_nl
+				i_output ("%"responses%": {")
+				output_nl
+				add_intent
+				r.process (current)
+				remove_intent
+				i_output("}")
+			end
+			if attached w_o.security_definitions as sd then
+				output(","); output_nl
+				i_output ("%"securityDefinitions%": {")
+				output_nl
+				add_intent
+				sd.process (current)
+				remove_intent
+				i_output("}")
+			end
+			if attached w_o.security as s then
+				output(","); output_nl
+				i_output ("%"security%": ["); output_nl
+				add_intent
+				across s as security
+				loop
+					i_output ("{"); output_nl
+					add_intent
+					s.item.process (current)
+					output_nl
+					remove_intent
+					i_output ("},");
+					output_nl
+				end
+				output_nl
+				i_output("}")
+			end
+			if attached w_o.tags as t then
+				output(","); output_nl
+				i_output ("%"tags%": ["); output_nl
+				add_intent
+				across t as tag
+				loop
+					i_output ("{"); output_nl
+					add_intent
+					tag.item.process (current)
+					output_nl
+					remove_intent
+					i_output ("},");
+					output_nl
+				end
+				output_nl
+				i_output("}")
+			end
 			remove_intent
 			output("}")
+			output_nl
 		end
 
 	process_tag_object(w_o: TAG_OBJECT)

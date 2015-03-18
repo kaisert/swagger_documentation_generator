@@ -19,9 +19,9 @@ feature
 		end
 
 feature
-	paths: LINKED_LIST[PATH_ITEM_OBJECT]
+	paths: LINKED_LIST[TUPLE[STRING,PATH_ITEM_OBJECT]]
 
-	add_path(a_path: PATH_ITEM_OBJECT)
+	add_path(a_path: TUPLE[STRING,PATH_ITEM_OBJECT])
 		-- sets the path
 		do
 			paths.extend(a_path)

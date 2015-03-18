@@ -10,8 +10,7 @@ deferred class
 inherit
 	AST_NULL_VISITOR
 	undefine
-		process_index_as
-	redefine
+		process_index_as,
 		process_class_as,
 		process_feature_as,
 		process_feature_clause_as,
@@ -26,45 +25,34 @@ feature
 		end
 
 feature
+	process_classes(classes: LINKED_LIST[CLASS_AS])
+	do
+		across classes as c
+		loop
+			c.item.process (current)
+		end
+	end
+
+feature {INDEXING_NOTES_VISITOR}
+	current_class: CLASS_AS
+
+feature
 	-- visitor implementation
 
 	process_class_as(l_as: CLASS_AS)
-		do
-			l_as.top_indexes.process (current)
-			if attached l_as.features as features then
-				across features as f
-				loop
-					f.item.process(current)
-				end
-			end
+		deferred
 		end
 
 	process_feature_as(l_as: FEATURE_AS)
-		do
-			if attached l_as.indexes as i then
-				across i as indexes
-				loop
-					indexes.item.process (current)
-				end
-			end
+		deferred
 		end
 
 	process_feature_clause_as(l_as: FEATURE_CLAUSE_AS)
-		do
-			if attached l_as.features as f then
-				across f as features
-				loop
-					features.item.process (current)
-				end
-			end
+		deferred
 		end
 
 	process_indexing_clause_as(l_as: INDEXING_CLAUSE_AS)
-		do
-			across l_as as indexes
-			loop
-				indexes.item.process (current)
-			end
+		deferred
 		end
 
 	process_index_as(l_as: INDEX_AS)

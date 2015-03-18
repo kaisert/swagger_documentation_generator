@@ -79,27 +79,44 @@ feature {NONE}
 
 feature
 
-	create_documentation_from_file(path: STRING)
+	create_documentation(path_to_folder: STRING)
 		-- creates documentation from a *.e file
 	require
-		path_not_void: path /= void
+		path_not_void: path_to_folder /= void
 	local
 		current_file: KL_BINARY_INPUT_FILE_32
+		directory: DIRECTORY
+		classes: LINKED_LIST[CLASS_AS]
 	do
-		create current_file.make_with_path (create {PATH}.make_from_string (path))
-		current_file.open_read
-		if current_file.is_open_read then
-			io.putstring ("is readable%N")
+		create classes.make
+		create directory.make_with_path (create {PATH}.make_from_string (path_to_folder))
+
+		across directory.entries as files
+		loop
+			if attached files.item as f and then
+			   attached files.item.extension as e and then
+			   files.item.extension.same_string ("e")
+			   then
+				create current_file.make_with_path (directory.path.extended_path (f))
+				current_file.open_read
+				io.putstring ("parsing file " + f.out + "%N")
+				if current_file.is_open_read then
+					parser.parse_class_from_file (current_file, Void, Void)
+				end
+				--current_file.close
+				if parser.error_count = 0  then
+					classes.extend (parser.root_node)
+				else
+					io.putstring ("error while parsing " + f.out + "%N")
+				end
+				parser.reset
+			end
 		end
-		parser.parse_class_from_file (current_file, Void, Void)
-		if parser.error_count = 0 then
-			io.putstring ("success")
-			swagger_object_creator.process_class_as (parser.root_node)
-			json_creator.process_swagger_object (swagger_object_creator.swagger_object)
-			io.putstring ("done")
-		else
-			io.putstring ("error")
-		end
+		io.putstring ("starting to scan classes for swagger annotations%N")
+		swagger_object_creator.process_class_as (parser.root_node)
+		io.putstring ("creating JSON file%N")
+		json_creator.process_swagger_object (swagger_object_creator.swagger_object)
+		io.putstring ("done")
 	end
 
 invariant
