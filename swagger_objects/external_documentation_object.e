@@ -11,10 +11,10 @@ inherit
 create
 	make
 feature
-	make(a_url: STRING)
+	make
 		-- initializes a new instance
 		do
-			url := a_url
+			initialize
 		end
 
 feature
@@ -22,7 +22,11 @@ feature
 		-- a short description of the target documentation
 	url: STRING
 		-- th URL for the target documentation
-
+	set_url(a_url: STRING)
+		-- seths the url
+		do
+			url := a_url
+		end
 	set_description(a_description: STRING)
 		-- sets the description
 		do

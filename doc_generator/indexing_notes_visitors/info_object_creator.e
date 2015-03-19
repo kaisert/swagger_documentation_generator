@@ -14,6 +14,7 @@ feature {NONE}
 		local
 	 		current_index, title, version: STRING
 	 	do
+	 		create result.make
 	 		current_index := ""
 			across l_as.index_list as index_list
 			loop
@@ -22,24 +23,16 @@ feature {NONE}
 				end
 				if current_index.starts_with("title=") then
 					current_index.replace_substring_all("title=", "")
-					title := current_index.twin
-					if title /= void and version /= void then
-						create Result.make (title, version)
-					end
+					result.set_titel (current_index.twin)
 				elseif current_index.starts_with ("version=") then
 					current_index.replace_substring_all("version=", "")
-					version := current_index.twin
-					if title /= void and version /= void then
-						create Result.make (title, version)
-					end
-				elseif current_index.starts_with("description=") and
-					attached Result as info_object then
+					result.set_version (current_index.twin)
+				elseif current_index.starts_with("description=") then
 					current_index.replace_substring_all("description=", "")
-					info_object.set_description(current_index.twin)
-				elseif current_index.starts_with("terms_of_service=") and
-					attached Result as info_object then
+					result.set_description(current_index.twin)
+				elseif current_index.starts_with("terms_of_service=") then
 					current_index.replace_substring_all("terms_of_service=", "")
-					info_object.set_terms_of_service(current_index.twin)
+					result.set_terms_of_service(current_index.twin)
 				end
 			end
 		end
@@ -88,7 +81,8 @@ feature {NONE}
 						url := current_index.twin
 					end
 				end
-				create result.make (name)
+				create result.make
+				result.set_name (name)
 				result.set_url (url)
 			end
 feature

@@ -103,7 +103,7 @@ feature
 				if current_file.is_open_read then
 					parser.parse_class_from_file (current_file, Void, Void)
 				end
-				--current_file.close
+				current_file.close
 				if parser.error_count = 0  then
 					classes.extend (parser.root_node)
 				else

@@ -19,16 +19,13 @@ feature
 		end
 
 feature
-	headers: LINKED_LIST[HEADER_OBJECT]
+	headers: HASH_TABLE[HEADER_OBJECT, STRING]
 		--the headers
 
-	add_header(a_header: HEADER_OBJECT)
+	set_headers(a_header: HASH_TABLE[HEADER_OBJECT, STRING])
 		-- adds a header
 		do
-			if headers = void then
-				create headers.make
-			end
-			headers.extend(a_header)
+			headers := a_header
 		end
 
 feature --visitor

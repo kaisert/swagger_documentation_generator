@@ -15,17 +15,11 @@ feature
 		--initialize new instance
 		do
 			initialize
-			create paths.make
+			create paths.make (51)
 		end
 
 feature
-	paths: LINKED_LIST[TUPLE[STRING,PATH_ITEM_OBJECT]]
-
-	add_path(a_path: TUPLE[STRING,PATH_ITEM_OBJECT])
-		-- sets the path
-		do
-			paths.extend(a_path)
-		end
+	paths: HASH_TABLE[PATH_ITEM_OBJECT, STRING]
 
 feature --visitor
 	process(v: SWAGGER_VISITOR)

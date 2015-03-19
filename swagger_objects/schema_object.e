@@ -21,7 +21,7 @@ feature
 	ref: STRING
 		-- the reference string
 	format: STRING
-		-- format (either int32, int 64, float, double, byte, date, date-time)
+		-- format (either int32, int64, float, double, byte, date, date-time)
 	title: STRING
 		-- title of the schema
 	description: STRING

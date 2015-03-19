@@ -5,14 +5,39 @@
     "title": "TEST_CLASS",
     "contact": {
       "name": "API Support",
-      "url": "http://www.swagger.io/support",
+      "url": "http:\/\/www.swagger.io\/support",
       "email": "support@swagger.io"
     },
     "license": {
       "name": "Apache 2.0",
-      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-    }
+      "url": "http:\/\/www.apache.org\/licenses\/LICENSE-2.0.html"
+    },
   },
   "paths": {
+
+    "\/blubb": {
+
+      "get": {
+        "responses": {
+
+          "400": {
+            "description": "blubb"
+          },
+        }
+,
+        "tags": [
+          "tag1", "tag2"
+        ],
+        "summary": "this is a summary",
+        "description": "description",
+        "operationId": "my first operation",
+        "consumes": [
+          "text\/xml", "text\/json"
+        ],
+        "produces": [
+          "image"
+        ]
+      },
+    },
   }
 }

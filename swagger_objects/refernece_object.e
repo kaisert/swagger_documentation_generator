@@ -11,16 +11,21 @@ inherit
 create
 	make
 feature
-	make(a_ref: STRING)
+	make
 		-- initializes a new instance
 		do
 			initialize
-			ref := a_ref
 		end
 
 feature
 	ref: STRING
 		-- the reference string
+
+	set_ref(a_ref: STRING)
+		-- sets the ref
+		do
+			ref := a_ref
+		end
 
 feature --visitor
 	process(v: SWAGGER_VISITOR)

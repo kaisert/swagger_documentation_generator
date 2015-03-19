@@ -21,6 +21,8 @@ feature
 feature
 	--ref: STRING
 		-- ALLOWS
+	path: STRING
+		-- path of the operation
 	get: OPERATION_OBJECT
 		-- a definition of a get operation on this path
 	put: OPERATION_OBJECT

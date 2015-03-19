@@ -11,11 +11,10 @@ inherit
 create
 	make
 feature
-	make(a_description: STRING)
+	make
 		-- initializes a new instance
 		do
 			initialize
-			description := a_description
 		end
 
 feature
@@ -27,6 +26,11 @@ feature
 		-- list of headres that are sent with the response
 	examples: EXAMPLE_OBJECT
 		-- an example of the response message
+	set_description(a_description: STRING)
+		-- sets the descriptin
+		do
+			description := a_description
+		end
 
 	set_schema(a_schema: SCHEMA_OBJECT)
 		-- sets the schema

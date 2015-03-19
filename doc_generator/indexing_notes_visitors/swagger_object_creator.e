@@ -26,7 +26,6 @@ feature
 
 feature {NONE}
 	swagger: STRING
-	paths: PATHS_OBJECT
 
 	extract_swagger_spec(l_as: INDEX_AS): STRING
 		-- extracts the swagger specification
@@ -38,6 +37,7 @@ feature {NONE}
 feature
 	create_swagger_object(classes: LINKED_LIST[CLASS_AS])
 		do
+			create swagger_object.make
 			across classes as c
 			loop
 				c.item.process (current)
@@ -46,8 +46,9 @@ feature
 			loop
 				c.item.process (paths_visitor)
 			end
-			create paths.make
-			create swagger_object.make (swagger, info_visitor.info, paths)
+			swagger_object.set_swagger (swagger)
+			swagger_object.set_info (info_visitor.info)
+			swagger_object.set_paths (paths_visitor.paths)
 		end
 
 feature
@@ -76,10 +77,13 @@ feature
 
 	--visitor
 	process_index_as(l_as: INDEX_AS)
+		local
+			annotation: STRING
 		do
-			if l_as.tag.name_32.same_string("sa_spec") then
+			annotation := l_as.tag.name_32
+			if annotation.same_string("sa_spec") then
 				swagger := extract_swagger_spec(l_as)
-			elseif l_as.tag.name_32.same_string ("sa_info") then
+			elseif annotation.same_string ("sa_info") then
 				current_class.process (info_visitor)
 			end
 		end

@@ -18,6 +18,18 @@ feature
 	required: BOOLEAN
 		-- determines whether this parameter is mandatory
 
+	set_name(a_name: STRING)
+		-- sets the name
+		do
+			name := a_name
+		end
+
+	set_in(a_in: STRING)
+		-- sets the in value
+		do
+			in := a_in
+		end
+
 	set_descrption(a_description: STRING)
 		-- sets the description
 		do

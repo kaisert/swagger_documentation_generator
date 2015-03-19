@@ -12,16 +12,10 @@ create
 	make
 
 feature
-	make(a_name: STRING; a_in: STRING; a_type: STRING; a_items: detachable ITEMS_OBJECT)
+	make
 		-- initializes a new instance
 		do
-			name := a_name
-			in := a_in
-			type := a_type
-			items := a_items
-			if a_type = "array" and a_items = void then
-				io.putstring ("items must not be void with type 'array'")
-			end
+			initialize
 		end
 
 feature

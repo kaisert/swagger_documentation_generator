@@ -11,14 +11,10 @@ inherit
 create
 	make
 feature
-	make(a_type: STRING; a_items: detachable ITEMS_OBJECT)
+	make
 		-- initializes a new instance
 		do
-			type := a_type
-			items := a_items
-			if a_items = void and type = "array" then
-				io.putstring ("items must not be void for type 'array'")
-			end
+			initialize
 		end
 
 feature

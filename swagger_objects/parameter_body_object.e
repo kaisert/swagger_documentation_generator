@@ -11,16 +11,20 @@ inherit
 create
 	make
 feature
-	make(a_name: STRING; a_in: STRING; a_schema: SCHEMA_OBJECT)
+	make
 		-- initializes a new instance
 		do
-			name := a_name
-			in := a_in
-			schema := a_schema
+			initialize
 		end
 
 feature
 	schema: SCHEMA_OBJECT
+
+	set_schema(a_schema: SCHEMA_OBJECT)
+		-- sets the schema
+		do
+			schema := a_schema
+		end
 
 feature --visitor
 process(v: SWAGGER_VISITOR)
