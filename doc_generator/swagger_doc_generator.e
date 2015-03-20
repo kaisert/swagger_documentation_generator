@@ -107,8 +107,10 @@ feature
 				if parser.error_count = 0  then
 					classes.extend (parser.root_node)
 				else
-					io.putstring ("error while parsing " + f.out + "%N")
+					io.putstring ("error while parsing " + f.out + ":%N")
+					io.putstring (parser.error_message + "%N")
 				end
+				parser.reset_nodes
 				parser.reset
 			end
 		end

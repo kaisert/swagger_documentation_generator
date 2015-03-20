@@ -58,14 +58,19 @@ feature {NONE}
 			output ("%N")
 		end
 
-	output_parameter (para, value: STRING)
+	output_para (para, value: STRING)
 			-- writes a string of the form
 			-- "para": "value"
 		do
 			i_output ("%"" + para + "%": %"" + value + "%"")
 		end
 
-	output_parameter_numerical (para, value: STRING)
+	output_para_bool(para: STRING; value: BOOLEAN)
+		do
+			i_output ("%"" + para + "%": " + value.out)
+		end
+
+	output_para_num (para, value: STRING)
 			--writes a string of the form
 			-- "para" value
 		do
@@ -124,7 +129,7 @@ feature {NONE}
 			if attached value as v then
 				output (",");
 				output_nl
-				output_parameter (para, v)
+				output_para (para, v)
 			end
 		end
 
@@ -189,7 +194,7 @@ feature
 		do
 			comma_required := false
 			if attached w_o.name as n then
-				output_parameter ("name", n)
+				output_para ("name", n)
 				comma_required := true
 			end
 			if attached w_o.url as u then
@@ -197,7 +202,7 @@ feature
 					output (",")
 				end
 				output_nl
-				output_parameter ("url", u)
+				output_para ("url", u)
 				comma_required := true
 			end
 			if attached w_o.email as e then
@@ -205,13 +210,15 @@ feature
 					output (",")
 				end
 				output_nl
-				output_parameter ("email", e)
+				output_para ("email", e)
 			end
 		end
 
 	process_definitions_object (w_o: DEFINITIONS_OBJECT)
 			-- process an object of type DEFINITIONS_OBJECT
 		do
+			output_nl
+			output_hashtable_objects (w_o.definitions)
 		end
 
 	process_example_object (w_o: EXAMPLE_OBJECT)
@@ -222,13 +229,16 @@ feature
 	process_external_documentation_object (w_o: EXTERNAL_DOCUMENTATION_OBJECT)
 			-- process an object of type EXTERNAL_DOCUMENTATION_OBJECT
 		do
+			output_nl
+			output_para ("url", w_o.url)
+			output_para_cond("description", w_o.description)
 		end
 
 	process_header_object (w_o: HEADER_OBJECT)
 			-- process an object of type HEADER_OBJECT
 		do
 			output_nl
-			output_parameter ("type", w_o.type)
+			output_para ("type", w_o.type)
 			output_para_cond ("description", w_o.description)
 			output_para_cond ("format", w_o.format)
 			output_para_cond ("collectionFormat", w_o.collection_format)
@@ -287,10 +297,10 @@ feature
 	process_info_object (w_o: INFO_OBJECT)
 			-- process an object of type INFO_OBJECT
 		do
-			output_parameter ("version", w_o.version)
+			output_para ("version", w_o.version)
 			output (",")
 			output_nl
-			output_parameter ("title", w_o.title)
+			output_para ("title", w_o.title)
 			output (",")
 			output_object_cond ("contact", w_o.contact)
 			output_object_cond ("license", w_o.license)
@@ -299,6 +309,14 @@ feature
 	process_items_object (w_o: ITEMS_OBJECT)
 			-- process an object of type ITEMS_OBJECT
 		do
+			output_para("type", w_o.type)
+			output_nl
+			output_para ("format", w_o.format)
+			output_nl
+			output_object_cond ("Items", w_o.items)
+			output_nl
+			output_para_cond ("collectionFormat", w_o.collection_format)
+			--TODO: rest
 		end
 
 	process_license_object (w_o: LICENSE_OBJECT)
@@ -307,7 +325,7 @@ feature
 			comma_required: BOOLEAN
 		do
 			if attached w_o.name as n then
-				output_parameter ("name", n)
+				output_para ("name", n)
 				comma_required := true
 			end
 			if attached w_o.url as u then
@@ -315,7 +333,7 @@ feature
 					output (",")
 				end
 				output_nl
-				output_parameter ("url", u)
+				output_para ("url", u)
 			end
 		end
 
@@ -342,16 +360,31 @@ feature
 	process_parameter_body_object (w_o: PARAMETER_BODY_OBJECT)
 			-- process an object of type PARAMETER_BODY_OBJECT
 		do
+			output_para("name", w_o.name); output(","); output_nl
+			output_para("in", w_o.in); output(","); output_nl
+			output_para_bool("required", w_o.required); output(","); output_nl
+			output_object ("schema", w_o.schema); output(","); output_nl
+			output_para_cond("description", w_o.description)
 		end
 
 	process_parameter_other_object (w_o: PARAMETER_OTHER_OBJECT)
 			-- process an object of type PARAMETER_OTHER_OBJECT
 		do
+			output_para("name", w_o.name); output(","); output_nl
+			output_para("in", w_o.in); output(","); output_nl
+			output_para_bool("required", w_o.required); output(","); output_nl
+			output_para("type", w_o.type); output(","); output_nl
+			output_para_cond("description", w_o.description)
+			output_para_cond("format", w_o.format)
+			output_object_cond ("items", w_o.items)
+			output_para_cond("collectionFormat", w_o.collection_format)
+			--TODO: rest
 		end
 
 	process_parameters_definitions_object (w_o: PARAMETERS_DEFINITIONS_OBJECT)
 			-- process an object of type PARAMETERS_DEFINITIONS_OBJECT
 		do
+			output_hashtable_objects (w_o.parameters)
 		end
 
 	process_path_item_object (w_o: PATH_ITEM_OBJECT)
@@ -377,12 +410,13 @@ feature
 	process_reference_object (w_o: REFERENCE_OBJECT)
 			-- process an object of type REFERENCE_OBJECT
 		do
+			output_para("$ref", w_o.ref)
 		end
 
 	process_response_object (w_o: RESPONSE_OBJECT)
 			-- process an object of type RESPONSE_OBJECT
 		do
-			output_parameter ("description", w_o.description)
+			output_para ("description", w_o.description); output(",")
 			output_object_cond ("schema", w_o.schema)
 			output_object_cond ("headers", w_o.headers)
 			output_object_cond ("examples", w_o.examples)
@@ -391,6 +425,7 @@ feature
 	process_responses_definitions_object (w_o: RESPONSES_DEFINITIONS_OBJECT)
 			-- process an object of type RESPONSES_DEFINITIONS_OBJECT
 		do
+			output_hashtable_objects (w_o.responses)
 		end
 
 	process_responses_object (w_o: RESPONSES_OBJECT)
@@ -402,28 +437,75 @@ feature
 
 	process_schema_object (w_o: SCHEMA_OBJECT)
 			-- process an object of type SCHEMA_OBJECT
+		local
+			comma_required: BOOLEAN
 		do
-				--TODO
+			comma_required := false
+			if attached w_o.type as t then
+				output_para ("type", t)
+				comma_required := true
+			elseif attached w_o.description as d then
+				if comma_required then
+					output_nl; output (",")
+				end
+				output_para ("description", d)
+				comma_required := true
+			elseif attached w_o.format as f then
+				if comma_required then
+					output_nl; output (",")
+				end
+				output_para ("format", f)
+				comma_required := true
+			elseif attached w_o.pattern as p then
+				if comma_required then
+					output_nl; output (",")
+				end
+				output_para ("pattern", p)
+				comma_required := true
+			elseif attached w_o.ref as r then
+				if comma_required then
+					output_nl; output (",")
+				end
+				output_para ("$ref", r)
+				comma_required := true
+			end
+			-- TODO
 		end
 
 	process_scopes_object (w_o: SCOPES_OBJECT)
 			-- process an object of type SCOPES_OBJECT
 		do
+			output_nl
+			across
+				w_o.scopes as o
+			loop
+				output_para (o.key, o.item); output(","); output_nl
+			end
 		end
 
 	process_security_definitions_object (w_o: SECURITY_DEFINITIONS_OBJECT)
 			-- process an object of type SECURITY_DEFINITIONS_OBJECT
 		do
+			output_hashtable_objects (w_o.security_schemes)
 		end
 
 	process_security_requirement_object (w_o: SECURITY_REQUIREMENT_OBJECT)
 			-- process an object of type SECURITY_REQUIREMENT_OBJECT
 		do
+			--TODO
 		end
 
 	process_security_scheme_object (w_o: SECURITY_SCHEME_OBJECT)
 			-- process an object of type SECURITY_SCHEME_OBJECT
 		do
+			output_para ("type", w_o.type); output(","); output_nl
+			output_para ("name", w_o.name); output(","); output_nl
+			output_para ("in", w_o.in); output(","); output_nl
+			output_para ("flow", w_o.flow); output(","); output_nl
+			output_para ("authorizationUrl", w_o.authorization_url); output(","); output_nl
+			output_para ("tokenUrl", w_o.token_url); output(","); output_nl
+			output_object_cond ("scopes", w_o.scopes)
+			output_para_cond ("description", w_o.description)
 		end
 
 	process_swagger_object (w_o: SWAGGER_OBJECT)
@@ -433,12 +515,11 @@ feature
 			i_output ("{")
 			output_nl
 			add_intent
-			output_parameter ("swagger", w_o.swagger)
+			output_para ("swagger", w_o.swagger)
 			output (","); output_nl
 			output_object ("info", w_o.info)
 			output (","); output_nl
 			output_object ("paths", w_o.paths)
-			output_nl
 			output_para_cond ("host", w_o.host)
 			output_para_cond ("basePath", w_o.base_path)
 			output_list_cond ("schemes", w_o.schemes)
@@ -451,6 +532,7 @@ feature
 			output_list_objects_cond ("security", w_o.security)
 			output_list_objects_cond ("tags", w_o.tags)
 			remove_intent
+			output_nl
 			output ("}")
 			output_nl
 		end
@@ -458,11 +540,21 @@ feature
 	process_tag_object (w_o: TAG_OBJECT)
 			-- process an object of type TAG_OBJECT
 		do
+			output_para ("name", w_o.name)
+			output_para_cond ("description", w_o.description)
+			output_object_cond ("externalDocs", w_o.external_docs)
 		end
 
 	process_xml_object (w_o: XML_OBJECT)
 			-- process an object of type XML_OBJECT
+		local
+			comma_required: BOOLEAN
 		do
+			output_para_bool ("attribute", w_o.is_attribute)
+			output_para_bool ("wrapped", w_o.wrapped)
+			output_para_cond ("name", w_o.name)
+			output_para_cond ("namespace", w_o.namespace)
+			output_para_cond ("prefix", w_o.prefix_string)
 		end
 
 end

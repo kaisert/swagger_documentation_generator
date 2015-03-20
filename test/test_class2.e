@@ -3,17 +3,14 @@ note
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
-	SA_SPEC: "swagger=2.0", "host=www.domain.com", "base_path=/basePath"
-	sa_spec_schemes: "http"
-	sa_consumes: "text"
-	sa_produces: "text"
+	SA_SPEC: "2.0"
 	SA_INFO: "version=1.0.0", "title=TEST_CLASS"
 	SA_CONTACT: "name=API Support", "url=http://www.swagger.io/support", "email=support@swagger.io"
 	SA_LICENSE: "name=Apache 2.0", "url=http://www.apache.org/licenses/LICENSE-2.0.html"
-
 	sa_path: "/test_base_path"
+	
 class
-	TEST_CLASS
+	TEST_CLASS2
 
 feature
 

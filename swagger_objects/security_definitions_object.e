@@ -15,19 +15,17 @@ feature
 		-- initializes a new instance
 		do
 			initialize
+			create security_schemes.make(10)
 		end
 
 feature
-	security_schmemes: LINKED_LIST[TUPLE[STRING, SECURITY_SCHEME_OBJECT]]
+	security_schemes: HASH_TABLE[SECURITY_SCHEME_OBJECT, STRING]
 		-- response defionitions, mapping a name to the parameter it defines
 
-	add_security_scheme(a_scheme: TUPLE[STRING, SECURITY_SCHEME_OBJECT])
+	set_security_scheme(some_schemes: HASH_TABLE[SECURITY_SCHEME_OBJECT, STRING])
 		-- adds a response
 		do
-			if security_schmemes = void then
-				create security_schmemes.make
-			end
-			security_schmemes.extend(a_scheme)
+			security_schemes := some_schemes
 		end
 
 feature --visitor

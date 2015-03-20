@@ -20,6 +20,8 @@ feature
 			-- initializes a new instance
 		do
 			initialize
+			wrapped := false
+			is_attribute := false
 		end
 
 feature

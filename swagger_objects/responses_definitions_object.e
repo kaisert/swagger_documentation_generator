@@ -18,16 +18,13 @@ feature
 		end
 
 feature
-	responses: LINKED_LIST[TUPLE[STRING, RESPONSE_OBJECT]]
+	responses: HASH_TABLE[RESPONSE_OBJECT, STRING]
 		-- response defionitions, mapping a name to the parameter it defines
 
-	add_responses(a_response: TUPLE[STRING, RESPONSE_OBJECT])
+	set_responses(some_responses: HASH_TABLE[RESPONSE_OBJECT, STRING])
 		-- adds a response
 		do
-			if responses = void then
-				create responses.make
-			end
-			responses.extend(a_response)
+			responses := some_responses
 		end
 
 feature --visitor

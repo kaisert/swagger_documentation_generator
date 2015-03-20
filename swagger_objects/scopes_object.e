@@ -20,20 +20,18 @@ feature
 			-- initializes a new instance
 		do
 			initialize
+			scopes.make(10)
 		end
 
 feature
 
-	scopes: LINKED_LIST [TUPLE [STRING, STRING]]
+	scopes: HASH_TABLE [STRING, STRING]
 			-- Maps between a name of a scope to a short description of it
 
-	add_scope (a_scope: TUPLE [STRING, STRING])
+	set_scope (some_scopes: HASH_TABLE [STRING, STRING])
 			-- adds a scope
 		do
-			if scopes = void then
-				create scopes.make
-			end
-			scopes.extend (a_scope)
+			scopes := some_scopes
 		end
 
 feature --visitor

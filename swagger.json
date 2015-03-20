@@ -15,13 +15,34 @@
   },
   "paths": {
 
-    "\/blubb": {
+    "\/test_base_path\/blubb": {
 
       "get": {
         "responses": {
 
           "400": {
-            "description": "blubb"
+            "description": "blubb",
+          },
+        }
+,
+        "tags": [
+          "tag1", "tag2"
+        ],
+        "summary": "this is a summary",
+        "description": "description",
+        "operationId": "my first operation",
+        "consumes": [
+          "text\/xml", "text\/json"
+        ],
+        "produces": [
+          "image"
+        ]
+      },
+      "put": {
+        "responses": {
+
+          "400": {
+            "description": "blubb",
           },
         }
 ,
@@ -39,5 +60,13 @@
         ]
       },
     },
-  }
+  },
+  "host": "www.domain.com",
+  "basePath": "\/basePath",
+  "consumes": [
+    "text"
+  ],
+  "produces": [
+    "text"
+  ]
 }

@@ -15,19 +15,17 @@ feature
 		-- initializes a new instance
 		do
 			initialize
+			create parameters.make(10)
 		end
 
 feature
-	parameters: LINKED_LIST[TUPLE[STRING, PARAMETER_OBJECT]]
+	parameters: HASH_TABLE[PARAMETER_OBJECT, STRING]
 		-- parameter defionitions, mapping a name to the parameter it defines
 
-	add_parameter(a_parameter: TUPLE[STRING, PARAMETER_OBJECT])
+	set_parameters(some_parameters: HASH_TABLE[PARAMETER_OBJECT, STRING])
 		-- adds a parameter
 		do
-			if parameters = void then
-				create parameters.make
-			end
-			parameters.extend(a_parameter)
+			parameters := some_parameters
 		end
 
 feature --visitor
