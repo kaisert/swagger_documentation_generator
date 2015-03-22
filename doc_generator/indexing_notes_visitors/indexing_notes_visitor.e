@@ -38,8 +38,21 @@ feature {INDEXING_NOTES_VISITOR}
 	current_headers: HEADERS_OBJECT
 	known_schemes: HASH_TABLE[SCHEMA_OBJECT, STRING]
 	known_headers: HASH_TABLE[HEADER_OBJECT, STRING]
+	known_external_docs: HASH_TABLE[EXTERNAL_DOCUMENTATION_OBJECT, STRING]
 
 feature {INDEXING_NOTES_VISITOR}
+
+
+	extract_list (l_as: INDEX_AS; list: LINKED_LIST [STRING])
+		do
+			across
+				l_as.index_list as index_list
+			loop
+				if attached {STRING_AS} index_list.item as s then
+					list.extend (s.value_32.twin)
+				end
+			end
+		end
 
 	extract_schema (l_as: INDEX_AS): TUPLE[s: STRING; so: SCHEMA_OBJECT]
 		local
@@ -162,7 +175,7 @@ feature {INDEXING_NOTES_VISITOR}
 
 		extract_header (l_as: INDEX_AS): TUPLE[s: STRING; h: HEADER_OBJECT]
 		local
-			current_index, name: STRING
+			current_index: STRING
 		do
 			create result.default_create
 			result.h := create {HEADER_OBJECT}.make
@@ -259,6 +272,54 @@ feature {INDEXING_NOTES_VISITOR}
 				result.p := parameter_body
 			else
 					--TODO: non-body parameter
+			end
+		end
+
+
+	extract_external_doc_def (l_as: INDEX_AS): TUPLE [s: STRING; ed: EXTERNAL_DOCUMENTATION_OBJECT]
+		local
+			current_index: STRING
+		do
+			create Result.default_create
+			result.ed := create {EXTERNAL_DOCUMENTATION_OBJECT}.make
+			across
+				l_as.index_list as index_list
+			loop
+				if attached {STRING_AS} index_list.item as s then
+					current_index.copy (s.value_32)
+				end
+				if current_index.starts_with ("name=") then
+					current_index.replace_substring_all ("name=", "")
+					result.s := current_index
+				elseif current_index.starts_with ("description=") then
+					current_index.replace_substring_all ("description=", "")
+					result.ed.set_description (current_index)
+				elseif current_index.starts_with ("url=") then
+					current_index.replace_substring_all ("url=", "")
+					result.ed.set_url (current_index)
+				end
+			end
+		end
+
+
+	extract_security_requirement (l_as: INDEX_AS): SECURITY_REQUIREMENT_OBJECT
+		local
+			field_value_pair: LIST [STRING]
+			current_index: STRING
+		do
+			create Result.make
+			across
+				l_as.index_list as index_list
+			loop
+				if attached {STRING_AS} index_list.item as s then
+					current_index.copy (s.value_32)
+				end
+				if current_index.starts_with ("name=") then
+					field_value_pair := current_index.split ('=')
+					result.set_field (field_value_pair.at (1))
+				else
+					result.values.extend (current_index)
+				end
 			end
 		end
 

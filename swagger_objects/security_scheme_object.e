@@ -10,7 +10,9 @@ class
 inherit
 
 	SWAGGER_API_OBJECT
-
+create
+	make
+	
 feature
 
 	make

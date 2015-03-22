@@ -60,7 +60,7 @@ feature
 	deprecated: BOOLEAN
 			-- declares this operation to be deprecated
 
-	security: LINKED_LIST [SECURITY_REQUIREMENT_OBJECT]
+	security_requirements: LINKED_LIST [SECURITY_REQUIREMENT_OBJECT]
 			-- declaration of which security shcemes are applied for this operation.
 
 	set_operation (a_operation: STRING)
@@ -180,13 +180,10 @@ feature
 			deprecated := is_deprecated
 		end
 
-	add_security (a_security: SECURITY_REQUIREMENT_OBJECT)
+	set_security (a_security: LINKED_LIST[SECURITY_REQUIREMENT_OBJECT])
 			-- adds a security
 		do
-			if security = void then
-				create security.make
-			end
-			security.extend (a_security)
+			security_requirements := a_security
 		end
 
 feature --visitor

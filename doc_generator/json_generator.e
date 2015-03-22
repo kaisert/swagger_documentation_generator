@@ -529,7 +529,7 @@ feature
 			output_object_cond ("parameters", w_o.parameters)
 			output_object_cond ("responses", w_o.responses)
 			output_object_cond ("securityDefinitions", w_o.security_definitions)
-			output_list_objects_cond ("security", w_o.security)
+			output_list_objects_cond ("security", w_o.security_requirements)
 			output_list_objects_cond ("tags", w_o.tags)
 			remove_intent
 			output_nl

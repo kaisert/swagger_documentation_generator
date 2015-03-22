@@ -60,7 +60,7 @@ feature
 	security_definitions: detachable SECURITY_DEFINITIONS_OBJECT
 			-- security scheme definitions that can be used acros the specification
 
-	security: detachable LINKED_LIST [SECURITY_REQUIREMENT_OBJECT]
+	security_requirements: detachable LINKED_LIST [SECURITY_REQUIREMENT_OBJECT]
 			-- declaration of which security schemes are applied for the API
 
 	tags: detachable LINKED_LIST [TAG_OBJECT]
@@ -163,22 +163,16 @@ feature
 			security_definitions := a_security_definitions
 		end
 
-	add_security (a_security: SECURITY_REQUIREMENT_OBJECT)
+	set_security (a_security: LINKED_LIST[SECURITY_REQUIREMENT_OBJECT])
 			-- adds a security
 		do
-			if security = void then
-				create security.make
-			end
-			security.extend (a_security)
+			security_requirements := a_security
 		end
 
-	add_tag (a_tag: TAG_OBJECT)
+	set_tags (some_tags: LINKED_LIST[TAG_OBJECT])
 			-- adds a tag
 		do
-			if tags = void then
-				create tags.make
-			end
-			tags.extend (a_tag)
+			tags := some_tags
 		end
 
 	set_external_docs (a_external_doc: EXTERNAL_DOCUMENTATION_OBJECT)

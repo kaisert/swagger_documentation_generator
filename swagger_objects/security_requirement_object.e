@@ -15,21 +15,20 @@ feature
 		--initializes a new instance
 		do
 			initialize
+			create values.make
 		end
 feature
-	requirements: LINKED_LIST[TUPLE[STRING, LINKED_LIST[STRING]]]
+	field: STRING
+	values: LINKED_LIST[STRING]
 
-	add_requirement(a_requirement: TUPLE[STRING, LINKED_LIST[STRING]])
-		-- adds a requirement
-		do
-			if requirements = void then
-				create requirements.make
-			end
-			requirements.extend(a_requirement)
-		end
 feature --visitor
 	process(v: SWAGGER_VISITOR)
 		do
 			v.process_security_requirement_object(current)
+		end
+
+	set_field(f: STRING)
+		do
+			field := f
 		end
 end

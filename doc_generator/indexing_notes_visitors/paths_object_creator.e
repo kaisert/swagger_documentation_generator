@@ -93,6 +93,9 @@ feature {NONE}
 					elseif current_index.starts_with ("path=") then
 						current_index.replace_substring_all ("path=", "")
 						path := current_index
+					elseif current_index.starts_with ("external_docs=") then
+						current_index.replace_substring_all ("external_docs=", "")
+						current_operation.set_external_docs (known_external_docs.at(current_index))
 					end
 				end
 			end
@@ -114,54 +117,6 @@ feature {NONE}
 				paths.paths.at (path).set_head (current_operation)
 			elseif current_operation.operation.same_string ("patch") then
 				paths.paths.at (path).set_patch (current_operation)
-			end
-		end
-
-	extract_tags (l_as: INDEX_AS)
-		do
-			create current_tags.make
-			across
-				l_as.index_list as index_list
-			loop
-				if attached {STRING_AS} index_list.item as index then
-					current_tags.extend (index.value_32.twin)
-				end
-			end
-		end
-
-	extract_consumes (l_as: INDEX_AS)
-		do
-			create current_consumes.make
-			across
-				l_as.index_list as index_list
-			loop
-				if attached {STRING_AS} index_list.item as index then
-					current_consumes.extend (index.value_32.twin)
-				end
-			end
-		end
-
-	extract_produces (l_as: INDEX_AS)
-		do
-			create current_produces.make
-			across
-				l_as.index_list as index_list
-			loop
-				if attached {STRING_AS} index_list.item as index then
-					current_produces.extend (index.value_32.twin)
-				end
-			end
-		end
-
-	extract_schemes (l_as: INDEX_AS)
-		do
-			create current_schemes.make
-			across
-				l_as.index_list as index_list
-			loop
-				if attached {STRING_AS} index_list.item as index then
-					current_schemes.extend (index.value_32.twin)
-				end
 			end
 		end
 
@@ -204,9 +159,9 @@ feature
 
 	process_feature_clause_as (l_as: FEATURE_CLAUSE_AS)
 		do
-			if attached l_as.features then
+			if attached l_as.features as f then
 				across
-					l_as.features as features
+					f as features
 				loop
 					features.item.process (current)
 				end
@@ -234,6 +189,7 @@ feature
 			parameter: TUPLE[s: STRING; p: PARAMETER_OBJECT]
 			response: TUPLE[s: STRING; r: RESPONSE_OBJECT]
 			header: TUPLE[s: STRING; h: HEADER_OBJECT]
+			external_doc: TUPLE [s: STRING; ed: EXTERNAL_DOCUMENTATION_OBJECT]
 			tag: STRING
 		do
 			tag := l_as.tag.string_value_32
@@ -256,16 +212,34 @@ feature
 				elseif tag.same_string ("sa_operation") then
 					extract_operation (l_as)
 				elseif tag.same_string ("sa_operation_tags") then
-					extract_tags (l_as)
+					if not attached current_tags then
+						create current_tags.make
+					end
+					extract_list (l_as, current_tags)
 				elseif tag.same_string ("sa_operation_consumes") then
-					extract_consumes (l_as)
+					if not attached current_consumes then
+						create current_consumes.make
+					end
+					extract_list (l_as, current_consumes)
 				elseif tag.same_string ("sa_operation_produces") then
-					extract_produces (l_as)
+					if not attached current_produces then
+						create current_produces.make
+					end
+					extract_list (l_as, current_produces)
 				elseif tag.same_string ("sa_operation_schemes") then
-					extract_schemes (l_as)
+					if not attached current_schemes then
+						create current_schemes.make
+					end
+					extract_list (l_as, current_schemes)
+				elseif tag.same_string ("sa_external_doc_def") then
+					external_doc := extract_external_doc_def (l_as)
+					known_external_docs.extend (external_doc.ed, external_doc.s)
+				elseif tag.same_string ("sa_security_requirement") then
+				if not attached current_operation.security_requirements then
+					current_operation.set_security (create {LINKED_LIST [SECURITY_REQUIREMENT_OBJECT]}.make)
 				end
-					--TODO: externalDocs
-					-- 		security
+				current_operation.security_requirements.extend (extract_security_requirement (l_as))
+				end
 			else
 				if tag.same_string ("sa_path") then
 					extract_base_path (l_as)

@@ -33,9 +33,19 @@ feature {NONE}
 			end
 		end
 
-feature
+feature {ANNOTATION_VALIDATOR}
 
-	validate_info_annotation (l_as: INDEX_AS): BOOLEAN
+	error_msg: STRING
+
+	error_found: BOOLEAN
+
+feature {ANNOTATION_VALIDATOR}
+
+	set_error_msg (l_as: INDEX_AS)
+		deferred
+		end
+
+	validate_info_annotation (l_as: INDEX_AS)
 		local
 			allowed_fields: LINKED_LIST [STRING]
 			imposed_fields: LINKED_LIST [STRING]
@@ -48,15 +58,19 @@ feature
 			allowed_fields.extend ("version")
 			imposed_fields.extend ("title")
 			imposed_fields.extend ("version")
-			Result := check_if_valid (l_as, allowed_fields, imposed_fields)
+			if not check_if_valid (l_as, allowed_fields, imposed_fields) then
+				set_error_msg (l_as)
+			end
 		end
 
-	validate_spec_annotation (l_as: INDEX_AS): BOOLEAN
+	validate_spec_annotation (l_as: INDEX_AS)
 		do
-			result := l_as.index_list.count = 1
+			if not (l_as.index_list.count = 1) then
+				set_error_msg (l_as)
+			end
 		end
 
-	validate_contact_annotation (l_as: INDEX_AS): BOOLEAN
+	validate_contact_annotation (l_as: INDEX_AS)
 		local
 			allowed_fields: LINKED_LIST [STRING]
 			imposed_fields: LINKED_LIST [STRING]
@@ -66,10 +80,12 @@ feature
 			allowed_fields.extend ("name")
 			allowed_fields.extend ("url")
 			allowed_fields.extend ("email")
-			result := check_if_valid (l_as, allowed_fields, imposed_fields)
+			if not check_if_valid (l_as, allowed_fields, imposed_fields) then
+				set_error_msg (l_as)
+			end
 		end
 
-	validate_license_annotation (l_as: INDEX_AS): BOOLEAN
+	validate_license_annotation (l_as: INDEX_AS)
 		local
 			allowed_fields: LINKED_LIST [STRING]
 			imposed_fields: LINKED_LIST [STRING]
@@ -79,10 +95,12 @@ feature
 			allowed_fields.extend ("name")
 			allowed_fields.extend ("url")
 			imposed_fields.extend ("name")
-			result := check_if_valid (l_as, allowed_fields, imposed_fields)
+			if not check_if_valid (l_as, allowed_fields, imposed_fields) then
+				set_error_msg (l_as)
+			end
 		end
 
-	validate_operation_annotation (l_as: INDEX_AS): BOOLEAN
+	validate_operation_annotation (l_as: INDEX_AS)
 		local
 			allowed_fields, imposed_fields: LINKED_LIST [STRING]
 		do
@@ -96,30 +114,19 @@ feature
 			allowed_fields.extend ("deprecated")
 			allowed_fields.extend ("security")
 			imposed_fields.extend ("response")
-			result := check_if_valid (l_as, allowed_fields, imposed_fields)
+			if not check_if_valid (l_as, allowed_fields, imposed_fields) then
+				set_error_msg (l_as)
+			end
 		end
 
-	validate_operation_tags_annotation (l_as: INDEX_AS): BOOLEAN
+	validate_list_annotation (l_as: INDEX_AS)
 		do
-			result := l_as.index_list.count > 0
+			if not (l_as.index_list.count > 0) then
+				set_error_msg (l_as)
+			end
 		end
 
-	validate_operation_consumes_annotation (l_as: INDEX_AS): BOOLEAN
-		do
-			result := l_as.index_list.count > 0
-		end
-
-	validate_operation_produces_anntation (l_as: INDEX_AS): BOOLEAN
-		do
-			result := l_as.index_list.count > 0
-		end
-
-	validate_operation_schemes_anntation (l_as: INDEX_AS): BOOLEAN
-		do
-			result := l_as.index_list.count > 0
-		end
-
-	validate_operation_schema_anntation (l_as: INDEX_AS): BOOLEAN
+	validate_operation_schema_annotation (l_as: INDEX_AS)
 		local
 			allowed_fields, imposed_fields: LINKED_LIST [STRING]
 		do
@@ -163,10 +170,12 @@ feature
 			allowed_fields.extend ("deprecated")
 			allowed_fields.extend ("security")
 			imposed_fields.extend ("name")
-			result := check_if_valid (l_as, allowed_fields, imposed_fields)
+			if not check_if_valid (l_as, allowed_fields, imposed_fields) then
+				set_error_msg (l_as)
+			end
 		end
 
-	validate_operation_response_annotation (l_as: INDEX_AS): BOOLEAN
+	validate_operation_response_annotation (l_as: INDEX_AS)
 		local
 			allowed_fields, imposed_fields: LINKED_LIST [STRING]
 		do
@@ -177,10 +186,12 @@ feature
 			allowed_fields.extend ("header")
 			allowed_fields.extend ("examples")
 			imposed_fields.extend ("description")
-			result := check_if_valid (l_as, allowed_fields, imposed_fields)
+			if not check_if_valid (l_as, allowed_fields, imposed_fields) then
+				set_error_msg (l_as)
+			end
 		end
 
-	validate_parameter_annotation (l_as: INDEX_AS): BOOLEAN
+	validate_parameter_annotation (l_as: INDEX_AS)
 		local
 			allowed_fields, imposed_fields, found_fields: LINKED_LIST [STRING]
 			is_body, is_array: BOOLEAN
@@ -213,27 +224,75 @@ feature
 			imposed_fields.extend ("name")
 			imposed_fields.extend ("in")
 			imposed_fields.extend ("required")
-			result := check_if_valid (l_as, allowed_fields, imposed_fields)
-			if result then
-				is_body := false
-				across
-					l_as.index_list as indexes
-				loop
-					if attached {STRING_AS} indexes.item as item then
-						current_value := item.value_32
-						current_value := current_value.split ('=').first
-						if current_value.split ('=').first.same_string ("in") then
-							is_body := is_body or current_value.split ('=').at (1).same_string ("body")
-						elseif current_value.split ('=').first.same_string ("type") then
-							is_array := current_value.split ('=').at (1).same_string ("array")
-						end
-						result := result and allowed_fields.has (current_value)
-						found_fields.extend (current_value)
+				--result := check_if_valid (l_as, allowed_fields, imposed_fields)
+				--if result then
+			is_body := false
+			across
+				l_as.index_list as indexes
+			loop
+				if attached {STRING_AS} indexes.item as item then
+					current_value := item.value_32
+					current_value := current_value.split ('=').first
+					if current_value.split ('=').first.same_string ("in") then
+						is_body := is_body or current_value.split ('=').at (1).same_string ("body")
+					elseif current_value.split ('=').first.same_string ("type") then
+						is_array := current_value.split ('=').at (1).same_string ("array")
 					end
+						--result := result and allowed_fields.has (current_value)
+					found_fields.extend (current_value)
 				end
-				result := result and (is_body implies found_fields.has ("schema")) and (not is_body implies found_fields.has ("type"))
+					--end
+					-- TODO
+					--result := result and (is_body implies found_fields.has ("schema")) and (not is_body implies found_fields.has ("type"))
 			end
-			result := result and (is_array implies found_fields.has ("items"))
+				--result := result and (is_array implies found_fields.has ("items"))
+		end
+
+	validate_base_path_annotation (l_as: INDEX_AS)
+		do
+			if not (l_as.index_list.count = 1) then
+				set_error_msg (l_as)
+			end
+		end
+
+	validate_external_doc_def_annotation (l_as: INDEX_AS)
+		do
+		end
+
+	validate_security_requirement_annotation (l_as: INDEX_AS)
+		do
+		end
+
+	validate_path_annotation (l_as: INDEX_AS)
+		do
+		end
+
+	validate_header_annotation (l_as: INDEX_AS)
+		do
+		end
+
+	validate_definition_annotation (l_as: INDEX_AS)
+		do
+		end
+
+	validate_schema_annotation (l_as: INDEX_AS)
+		do
+		end
+
+	validate_response_annotation (l_as: INDEX_AS)
+		do
+		end
+
+	validate_security_scheme_annotation (l_as: INDEX_AS)
+		do
+		end
+
+	validate_scope_annotation (l_as: INDEX_AS)
+		do
+		end
+
+	validate_external_doc_annotation (l_as: INDEX_AS)
+		do
 		end
 
 end
