@@ -1,0 +1,74 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "TEST_CLASS",
+    "contact": {
+      "name": "API Support",
+      "url": "http:\/\/www.swagger.io\/support",
+      "email": "support@swagger.io"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http:\/\/www.apache.org\/licenses\/LICENSE-2.0.html"
+    },
+  },
+  "paths": {
+
+    "\/test_base_path\/blubb": {
+
+      "get": {
+        "responses": {
+
+          "400": {
+            "description": "blubb",
+          },
+        }
+,
+        "tags": [
+          "tag1", "tag2"
+        ],
+        "summary": "this is a summary",
+        "description": "description",
+        "operationId": "my first operation",
+        "consumes": [
+          "text\/xml", "text\/json"
+        ],
+        "produces": [
+          "image"
+        ],
+        "deprecated": False
+      },
+      "put": {
+        "responses": {
+
+          "400": {
+            "description": "blubb",
+          },
+        }
+,
+        "tags": [
+          "tag1", "tag2"
+        ],
+        "summary": "this is a summary",
+        "description": "description",
+        "operationId": "my first operation",
+        "consumes": [
+          "text\/xml", "text\/json"
+        ],
+        "produces": [
+          "image"
+        ],
+        "deprecated": False
+      },
+    },
+  },
+  "host": "www.domain.com",
+  "basePath": "\/basePath",
+  "consumes": [
+    "text"
+  ],
+  "produces": [
+    "text"
+  ]
+}
