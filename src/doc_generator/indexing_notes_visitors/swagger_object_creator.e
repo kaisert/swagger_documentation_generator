@@ -25,7 +25,7 @@ feature
 			create known_schemes.make (10)
 		end
 
-feature {NONE}
+feature
 
 	info_visitor: INFO_OBJECT_CREATOR
 
@@ -39,7 +39,7 @@ feature
 
 	swagger_object: SWAGGER_OBJECT
 
-feature {NONE}
+feature
 
 	extract_swagger_spec (l_as: INDEX_AS)
 			-- extracts the swagger specification

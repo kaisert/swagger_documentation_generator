@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="unit_test" uuid="118F0C79-38A3-4747-972C-FBC4619D448D">
 	<target name="unit_test">
-		<root class="APPLICATION" feature="make"/>
+		<root all_classes="true"/>
 		<option warning="true" void_safety="none">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="parser" location="\home\tobias\i_ti_eytsch\eiffel\svn\15.01_dev\framework\parser\parser.ecf"/>
-		<library name="swagger_documentation_generation" location="\home\tobias\i_ti_eytsch\eiffel_proj\swagger_documentation_generation\src\swagger_documentation_generation.ecf"/>
+		<library name="swagger_documentation_generation" location="\home\tobias\i_ti_eytsch\eiffel_proj\swagger_documentation_generation\src\swagger_documentation_generation.ecf" readonly="false"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
 		<cluster name="unit_test" location=".\" recursive="true">
 			<file_rule>
