@@ -19,6 +19,7 @@ feature
 	make
 			--initializes a new instance
 		do
+			create swagger_object.make
 			create info_visitor
 			create paths_visitor.make
 			create known_schemes.make (10)
@@ -168,7 +169,6 @@ feature
 
 	create_swagger_object (classes: LINKED_LIST [CLASS_AS])
 		do
-			create swagger_object.make
 			across
 				classes as c
 			loop

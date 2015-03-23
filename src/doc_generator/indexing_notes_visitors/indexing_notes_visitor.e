@@ -8,40 +8,49 @@ deferred class
 	INDEXING_NOTES_VISITOR
 
 inherit
+
 	AST_NULL_VISITOR
-	undefine
-		process_index_as,
-		process_class_as,
-		process_feature_as,
-		process_feature_clause_as,
-		process_indexing_clause_as
-	end
+		undefine
+			process_index_as,
+			process_class_as,
+			process_feature_as,
+			process_feature_clause_as,
+			process_indexing_clause_as
+		end
+
 feature
+
 	match_list: LEAF_AS_LIST
 
-	set_match_list(a_match_list: LEAF_AS_LIST)
+	set_match_list (a_match_list: LEAF_AS_LIST)
 		do
 			match_list := a_match_list
 		end
 
 feature
-	process_classes(classes: LINKED_LIST[CLASS_AS])
-	do
-		across classes as c
-		loop
-			c.item.process (current)
+
+	process_classes (classes: LINKED_LIST [CLASS_AS])
+		do
+			across
+				classes as c
+			loop
+				c.item.process (current)
+			end
 		end
-	end
 
 feature {INDEXING_NOTES_VISITOR}
+
 	current_class: CLASS_AS
+
 	current_headers: HEADERS_OBJECT
-	known_schemes: HASH_TABLE[SCHEMA_OBJECT, STRING]
-	known_headers: HASH_TABLE[HEADER_OBJECT, STRING]
-	known_external_docs: HASH_TABLE[EXTERNAL_DOCUMENTATION_OBJECT, STRING]
+
+	known_schemes: HASH_TABLE [SCHEMA_OBJECT, STRING]
+
+	known_headers: HASH_TABLE [HEADER_OBJECT, STRING]
+
+	known_external_docs: HASH_TABLE [EXTERNAL_DOCUMENTATION_OBJECT, STRING]
 
 feature {INDEXING_NOTES_VISITOR}
-
 
 	extract_list (l_as: INDEX_AS; list: LINKED_LIST [STRING])
 		do
@@ -54,7 +63,7 @@ feature {INDEXING_NOTES_VISITOR}
 			end
 		end
 
-	extract_schema (l_as: INDEX_AS): TUPLE[s: STRING; so: SCHEMA_OBJECT]
+	extract_schema (l_as: INDEX_AS): TUPLE [s: STRING; so: SCHEMA_OBJECT]
 		local
 			current_index: STRING
 		do
@@ -140,40 +149,40 @@ feature {INDEXING_NOTES_VISITOR}
 			end
 		end
 
-		extract_response (l_as: INDEX_AS): TUPLE[s: STRING; r: RESPONSE_OBJECT]
-			local
-				current_value, status_code: STRING
-			do
-				status_code := "default"
-				create result.default_create
-				result.r := create {RESPONSE_OBJECT}.make
-				across
-					l_as.index_list as index_list
-				loop
-					if attached {STRING_AS} index_list.item as index then
-						current_value := index.value_32.twin
-						if current_value.starts_with ("description=") then
-							current_value.replace_substring_all ("description=", "")
-							result.r.set_description (current_value)
-						elseif current_value.starts_with ("schema=") then
-							current_value.replace_substring_all ("schema=", "")
-							result.r.set_schema (known_schemes.at (current_value))
-						elseif current_value.starts_with ("header=") then
-							current_value.replace_substring_all ("header=", "")
-							if result.r.headers = void then
-								result.r.set_headers (create {HEADERS_OBJECT}.make)
-							end
-							result.r.headers.headers.extend (known_headers.at (current_value), current_value)
-								--TODO: example object
-						elseif current_value.starts_with ("status_code=") then
-							current_value.replace_substring_all ("status_code=", "")
-							result.s := current_value
+	extract_response (l_as: INDEX_AS): TUPLE [s: STRING; r: RESPONSE_OBJECT]
+		local
+			current_value, status_code: STRING
+		do
+			status_code := "default"
+			create result.default_create
+			result.r := create {RESPONSE_OBJECT}.make
+			across
+				l_as.index_list as index_list
+			loop
+				if attached {STRING_AS} index_list.item as index then
+					current_value := index.value_32.twin
+					if current_value.starts_with ("description=") then
+						current_value.replace_substring_all ("description=", "")
+						result.r.set_description (current_value)
+					elseif current_value.starts_with ("schema=") then
+						current_value.replace_substring_all ("schema=", "")
+						result.r.set_schema (known_schemes.at (current_value))
+					elseif current_value.starts_with ("header=") then
+						current_value.replace_substring_all ("header=", "")
+						if result.r.headers = void then
+							result.r.set_headers (create {HEADERS_OBJECT}.make)
 						end
+						result.r.headers.headers.extend (known_headers.at (current_value), current_value)
+							--TODO: example object
+					elseif current_value.starts_with ("status_code=") then
+						current_value.replace_substring_all ("status_code=", "")
+						result.s := current_value
 					end
 				end
 			end
+		end
 
-		extract_header (l_as: INDEX_AS): TUPLE[s: STRING; h: HEADER_OBJECT]
+	extract_header (l_as: INDEX_AS): TUPLE [s: STRING; h: HEADER_OBJECT]
 		local
 			current_index: STRING
 		do
@@ -228,7 +237,7 @@ feature {INDEXING_NOTES_VISITOR}
 			end
 		end
 
-		extract_parameter (l_as: INDEX_AS): TUPLE[s: STRING; p: PARAMETER_OBJECT]
+	extract_parameter (l_as: INDEX_AS): TUPLE [s: STRING; p: PARAMETER_OBJECT]
 		local
 			is_body_parameter: BOOLEAN
 			parameter_body: PARAMETER_BODY_OBJECT
@@ -275,7 +284,6 @@ feature {INDEXING_NOTES_VISITOR}
 			end
 		end
 
-
 	extract_external_doc_def (l_as: INDEX_AS): TUPLE [s: STRING; ed: EXTERNAL_DOCUMENTATION_OBJECT]
 		local
 			current_index: STRING
@@ -301,7 +309,6 @@ feature {INDEXING_NOTES_VISITOR}
 			end
 		end
 
-
 	extract_security_requirement (l_as: INDEX_AS): SECURITY_REQUIREMENT_OBJECT
 		local
 			field_value_pair: LIST [STRING]
@@ -326,23 +333,24 @@ feature {INDEXING_NOTES_VISITOR}
 feature
 	-- visitor implementation
 
-	process_class_as(l_as: CLASS_AS)
+	process_class_as (l_as: CLASS_AS)
 		deferred
 		end
 
-	process_feature_as(l_as: FEATURE_AS)
+	process_feature_as (l_as: FEATURE_AS)
 		deferred
 		end
 
-	process_feature_clause_as(l_as: FEATURE_CLAUSE_AS)
+	process_feature_clause_as (l_as: FEATURE_CLAUSE_AS)
 		deferred
 		end
 
-	process_indexing_clause_as(l_as: INDEXING_CLAUSE_AS)
+	process_indexing_clause_as (l_as: INDEXING_CLAUSE_AS)
 		deferred
 		end
 
-	process_index_as(l_as: INDEX_AS)
+	process_index_as (l_as: INDEX_AS)
 		deferred
 		end
+
 end
