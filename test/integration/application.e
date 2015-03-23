@@ -18,7 +18,7 @@ feature {NONE} -- Initialization
 			-- Run application.
 		do
 			create doc_generator.make
-			doc_generator.create_documentation (".")
+			doc_generator.create_documentation (".\classes")
 		end
 
 feature
