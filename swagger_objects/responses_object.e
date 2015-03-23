@@ -26,12 +26,6 @@ feature
 
 	references: LINKED_LIST[REFERENCE_OBJECT]
 
---	set_responses(some_responses: HASH_TABLE[RESPONSE_OBJECT, STRING])
---		-- sets the responses
---		do
---			responses := some_responses
---		end
-
 	add_reference(a_reference: REFERENCE_OBJECT)
 		--adds a reference
 		do

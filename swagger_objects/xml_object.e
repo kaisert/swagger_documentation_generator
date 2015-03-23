@@ -43,6 +43,10 @@ feature
 			-- may be used only for an array definition. signifies whether the array
 			-- is wrapped.
 
+	is_attribute_is_set: BOOLEAN
+
+	wrapped_is_set: BOOLEAN
+
 	set_name (a_name: STRING)
 			-- set the name
 		do
@@ -65,12 +69,14 @@ feature
 			-- set the attribute
 		do
 			is_attribute := a_attribute
+			is_attribute_is_set := true
 		end
 
 	set_wrapped (a_wrapped: BOOLEAN)
 			-- set the wrapped
 		do
 			wrapped := a_wrapped
+			wrapped_is_set := true
 		end
 
 feature --visitor

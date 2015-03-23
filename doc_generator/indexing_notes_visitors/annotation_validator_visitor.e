@@ -22,6 +22,7 @@ feature {NONE}
 feature {NONE}
 	set_error_msg(l_as: INDEX_AS)
 	do
+		all_annotations_valid := false
 		error_found := true
 		error_msg := "Error at%N"
 		if attached current_class as c then
@@ -31,9 +32,29 @@ feature {NONE}
 			error_msg := error_msg + "  feature '" + f.feature_name.name_32 + "'%N"
 		end
 		error_msg := error_msg + "  Annotation tag: '" + l_as.tag.name_32 + "'%N"
-		--error_msg := error_msg + "line number: " + l_as.
+		if not valid_type then
+			error_msg := error_msg + "Wrong type, please use string-values as annotations.%N"
+		end
+		if attached wrong_attribute as a then
+			error_msg := error_msg + "  attribute '" + a + "' not recognized.%N"
+		end
+		if attached missing_field as f then
+			error_msg := error_msg + "  required field '" + f + "' missing.%N"
+		end
+		error_msg := error_msg + "%N"
 	end
+feature
+	all_annotations_valid: BOOLEAN
 
+	validate_classes(classes: LINKED_LIST[CLASS_AS])
+	do
+		all_annotations_valid:= true
+		across
+			classes as c
+		loop
+			c.item.process (current)
+		end
+	end
 feature
 	--visitor
 
@@ -57,9 +78,11 @@ feature
 
 	process_feature_as (l_as: FEATURE_AS)
 		do
+			current_feature := l_as
 			if attached l_as.indexes as indexes then
 				indexes.process (current)
 			end
+			current_feature := Void
 		end
 
 	process_feature_clause_as (l_as: FEATURE_CLAUSE_AS)

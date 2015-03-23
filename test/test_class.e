@@ -10,7 +10,7 @@ note
 	SA_INFO: "version=1.0.0", "title=TEST_CLASS"
 	SA_CONTACT: "name=API Support", "url=http://www.swagger.io/support", "email=support@swagger.io"
 	SA_LICENSE: "name=Apache 2.0", "url=http://www.apache.org/licenses/LICENSE-2.0.html"
-	sa_security_scheme: "type=blubb", "description=this is a description", "name=this is a name", "in=query", "flow=implicit", "authorization_url=http://www.foo.com", "token_url=http://www.bar.com"
+	--sa_security_scheme: "type=blubb", "description=this is a description", "name=this is a name", "in=query", "flow=implicit", "authorization_url=http://www.foo.com", "token_url=http://www.bar.com"
 
 	sa_path: "/test_base_path"
 class

@@ -16,6 +16,7 @@ feature
 	parser: EIFFEL_PARSER
 	factory: AST_ROUNDTRIP_FACTORY
 	swagger_object_creator: SWAGGER_OBJECT_CREATOR
+	annotation_validator: ANNOTATION_VALIDATOR_VISITOR
 	json_creator: JSON_GENERATOR
 
 feature
@@ -31,6 +32,7 @@ feature {NONE}
 	do
 		create factory
 		create parser.make_with_factory (factory)
+		create annotation_validator
 		create swagger_object_creator.make
 		create json_creator.make
 		parser.set_il_parser
@@ -114,11 +116,15 @@ feature
 				parser.reset
 			end
 		end
-		io.putstring ("starting to scan classes for swagger annotations%N")
-		swagger_object_creator.create_swagger_object (classes)
-		io.putstring ("creating JSON file%N")
-		json_creator.process_swagger_object (swagger_object_creator.swagger_object)
-		io.putstring ("done")
+		io.putstring ("validating annotations%N")
+		annotation_validator.validate_classes (classes)
+		if annotation_validator.all_annotations_valid then
+			io.putstring ("starting to scan classes for swagger annotations%N")
+			swagger_object_creator.create_swagger_object (classes)
+			io.putstring ("creating JSON file%N")
+			json_creator.process_swagger_object (swagger_object_creator.swagger_object)
+			io.putstring ("done")
+		end
 	end
 
 invariant

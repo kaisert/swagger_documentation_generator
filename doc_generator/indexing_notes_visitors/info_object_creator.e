@@ -12,7 +12,7 @@ feature {NONE}
 	extract_info(l_as: INDEX_AS): INFO_OBJECT
 		-- extracts the info object
 		local
-	 		current_index, title, version: STRING
+	 		current_index: STRING
 	 	do
 	 		create result.make
 	 		current_index := ""

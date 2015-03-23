@@ -355,6 +355,7 @@ feature
 			output_para_cond ("operationId", w_o.operation_id)
 			output_list_cond ("consumes", w_o.consumes)
 			output_list_cond ("produces", w_o.produces)
+			--TODO deprecated
 		end
 
 	process_parameter_body_object (w_o: PARAMETER_BODY_OBJECT)
