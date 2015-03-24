@@ -2,21 +2,20 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="unit_test" uuid="92685C15-EA3C-4B95-9B63-56470C1C510C">
 	<target name="unit_test">
 		<root class="APPLICATION" feature="make"/>
+		<file_rule>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/CVS$</exclude>
+			<exclude>/.svn$</exclude>
+		</file_rule>
 		<option warning="true" void_safety="none">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="parser" location="$ISE_LIBRARY\framework\parser\parser.ecf"/>
+		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf"/>
 		<library name="swagger_documentation_generation" location="..\..\src\swagger_documentation_generation.ecf"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
-		<cluster name="unit_test" location=".\" recursive="true">
-			<file_rule>
-				<exclude>/EIFGENs$</exclude>
-				<exclude>/CVS$</exclude>
-				<exclude>/.svn$</exclude>
-			</file_rule>
-			<tests name="unit_tests" location="unit_tests\"/>
-		</cluster>
+		<tests name="unit_test" location=".\" recursive="true">
+		</tests>
 	</target>
 </system>

@@ -97,37 +97,37 @@ feature -- Test routines
 		assert("true", true)
 	end
 
---	test_spec_annotation
---			-- New test routine
---		note
---			testing: "covers/{SWAGGER_DOC_GENERATOR}.extract_swagger_spec"
---		local
---			swagger, host, base_path: STRING
---		do
---			tag := "sa_spec"
---			swagger := "2.0"
---			host := "myHost"
---			base_path := "/path"
---			annotations.extend ("swagger=" + swagger)
---			annotations.extend ("host=" + host)
---			annotations.extend ("base_path=" + base_path)
---			index := create_index_as (tag, annotations)
---			target.process_index_as (index)
---			assert ("spec not set", target.swagger_object.swagger.same_string (swagger))
---			assert ("host not set", target.swagger_object.host.same_string (host))
---			assert ("base_path not set", target.swagger_object.base_path.same_string (base_path))
---		end
+	test_spec_annotation
+			-- New test routine
+		note
+			testing: "covers/{SWAGGER_DOC_GENERATOR}.extract_swagger_spec"
+		local
+			swagger, host, base_path: STRING
+		do
+			tag := "sa_spec"
+			swagger := "2.0"
+			host := "myHost"
+			base_path := "/path"
+			annotations.extend ("swagger=" + swagger)
+			annotations.extend ("host=" + host)
+			annotations.extend ("base_path=" + base_path)
+			index := create_index_as (tag, annotations)
+			target.process_index_as (index)
+			assert ("spec not set", target.swagger_object.swagger.same_string (swagger))
+			assert ("host not set", target.swagger_object.host.same_string (host))
+			assert ("base_path not set", target.swagger_object.base_path.same_string (base_path))
+		end
 
---	test_consumes_annotation
---		note
---			testing: "covers/{SWAGGER_DOC_GENERATOR}.extract_list"
---		do
---			tag := "sa_consumes"
---			annotations.extend ("consume0")
---			index := create_index_as (tag, annotations)
---			target.process_index_as (index)
---			assert ("consumes not set", lists_contain_same_elements (annotations, target.swagger_object.consumes))
---		end
+	test_consumes_annotation
+		note
+			testing: "covers/{SWAGGER_DOC_GENERATOR}.extract_list"
+		do
+			tag := "sa_consumes"
+			annotations.extend ("consume0")
+			index := create_index_as (tag, annotations)
+			target.process_index_as (index)
+			assert ("consumes not set", lists_contain_same_elements (annotations, target.swagger_object.consumes))
+		end
 
 --	test_produces_annotation
 --		note
