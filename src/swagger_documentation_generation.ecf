@@ -13,10 +13,6 @@
 		</option>
 		<setting name="console_application" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-<<<<<<< HEAD
-=======
-		<!-- <library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/> -->
->>>>>>> d89544f7ad21d28dd27ac9d863b9e20b09206803
 		<library name="file_utilities" location="$EIFFEL_SRC\framework\file_utilities\file_utilities.ecf"/>
 		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf"/>
 		<cluster name="swagger_documentation_generation" location=".\" recursive="true">
