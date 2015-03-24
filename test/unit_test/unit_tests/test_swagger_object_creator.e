@@ -50,7 +50,7 @@ feature {NONE} -- Events
 			loop
 				temp_e_list.extend (create {STRING_AS}.initialize (i.item, 0, 0, 0, 0, 0, 0, 0))
 			end
-			create result.initialize (create {ID_AS}.initialize (a_tag), temp_e_list, create {SYMBOL_AS}.make (1, 1, 1, 1, 1, 1, 1, 1))
+			create Result.initialize (create {ID_AS}.initialize (a_tag), temp_e_list, create {SYMBOL_AS}.make (1, 1, 1, 1, 1, 1, 1, 1))
 		end
 
 	lists_contain_same_elements (l1, l2: LINKED_LIST [STRING]): BOOLEAN
@@ -60,12 +60,12 @@ feature {NONE} -- Events
 		LOCAL
 			s: STRING
 		do
-			result := l1.count = l2.count
+			Result := l1.count = l2.count
 			across
 				l1 as l
 			loop
 				s := l.item
-				result := result and contains_string (s, l2)
+				Result := Result and contains_string (s, l2)
 			end
 		end
 
@@ -74,11 +74,11 @@ feature {NONE} -- Events
 			s_not_void: s /= Void
 			l_not_void: l /= Void
 		do
-			result := false
+			Result := False
 			across
 				l as list
 			loop
-				result := result or list.item.same_string (s)
+				Result := Result or list.item.same_string (s)
 			end
 		end
 
@@ -93,9 +93,9 @@ feature {NONE}
 feature -- Test routines
 
 	test_test
-	do
-		assert("true", true)
-	end
+		do
+			assert("true", True)
+		end
 
 	test_spec_annotation
 			-- New test routine
@@ -180,19 +180,19 @@ feature -- Test routines
 --			description := "description"
 --			multiple_of := 1.0
 --			maximum := 1.0
---			exclusiveMaximum := true
+--			exclusiveMaximum := True
 --			minimum := 1.0
---			exclusiveMinimum := true
+--			exclusiveMinimum := True
 --			maxLength := 1
 --			minLength := 1
 --			pattern := "pattern"
 --			maxItems := 1
 --			minItems := 1
---			uniqueItems := true
+--			uniqueItems := True
 --			maxProperties := 1
 --			minProperties := 1
---			required := true
---			readonly := true
+--			required := True
+--			readonly := True
 --			annotations.extend ("name=" + name)
 --			annotations.extend ("ref=" + ref.out)
 --			annotations.extend ("name=" + name.out)
@@ -271,15 +271,15 @@ feature -- Test routines
 --			format := "format"
 --			collection_format := "collection_format"
 --			maximum := 1.0
---			exclusive_maximum := true
+--			exclusive_maximum := True
 --			minimum := 1.0
---			exclusive_minimum := true
+--			exclusive_minimum := True
 --			max_length := 1
 --			min_length := 1
 --			pattern := "pattern"
 --			max_items := 1
 --			min_items := 1
---			unique_items := true
+--			unique_items := True
 --			multiple_of := 1.0
 --			annotations.extend ("type=" + type.out)
 --			annotations.extend ("format=" + format.out)
