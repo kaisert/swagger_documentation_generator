@@ -55,7 +55,6 @@ feature {NONE}
 		local
 			file: KL_BINARY_INPUT_FILE_32
 			count, nb: INTEGER
-
 		do
 			result := ""
 			if attached path as p and then attached p.extension as ext and then ext.is_case_insensitive_equal ("e") then
@@ -94,32 +93,41 @@ feature
 			path_not_void: path_to_folder /= void
 		local
 			current_file: KL_BINARY_INPUT_FILE_32
-			directory: DIRECTORY
+			directory_queue: LINKED_LIST [DIRECTORY]
 			classes: LINKED_LIST [CLASS_AS]
 		do
 			create classes.make
-			create directory.make_with_path (create {PATH}.make_from_string (path_to_folder))
-			across
-				directory.entries as files
+			create directory_queue.make
+			directory_queue.extend (create {DIRECTORY}.make_with_path (create {PATH}.make_from_string (path_to_folder)))
+			from
+				directory_queue.start
+			until
+				directory_queue.after
 			loop
-				if attached files.item as f and then attached files.item.extension as e and then files.item.extension.same_string ("e") then
-					create current_file.make_with_path (directory.path.extended_path (f))
-					current_file.open_read
-					io.putstring ("parsing file " + f.out + "%N")
-					if current_file.is_open_read then
-						parser.parse (current_file)
+				across
+					directory_queue.item.entries as files
+				loop
+					if attached files.item as f and then attached files.item.extension as e and then files.item.extension.same_string ("e") then
+						create current_file.make_with_path (directory_queue.item.path.extended_path (f))
+						current_file.open_read
+						io.putstring ("parsing file " + f.out + "%N")
+						if current_file.is_open_read then
+							parser.parse (current_file)
+						end
+						current_file.close
+						if parser.error_count = 0 then
+							classes.extend (parser.root_node)
+							parser.reset
+							initialize
+						else
+							io.putstring ("error while parsing " + f.out + ":%N")
+							io.put_string (parser.error_code.out)
+							io.putstring (parser.error_message + "%N")
+						end
+						parser.wipe_out
+							--elseif files.item. then
 					end
-					current_file.close
-					if parser.error_count = 0 then
-						classes.extend (parser.root_node)
-						parser.reset
-						initialize
-					else
-						io.putstring ("error while parsing " + f.out + ":%N")
-						io.put_string (parser.error_code.out)
-						io.putstring (parser.error_message + "%N")
-					end
-					parser.wipe_out
+					directory_queue.forth
 				end
 			end
 			io.putstring ("validating annotations%N")

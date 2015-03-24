@@ -10,9 +10,8 @@
 		</option>
 		<setting name="console_application" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<!-- <library name="environment" location="$ISE_LIBRARY\framework\environment\environment.ecf"/> -->
-		<library name="file_utilities" location="$ISE_LIBRARY\framework\file_utilities\file_utilities.ecf"/>
-		<library name="parser" location="$ISE_LIBRARY\framework\parser\parser.ecf"/>
+		<library name="file_utilities" location="$EIFFEL_SRC\framework\file_utilities\file_utilities.ecf"/>
+		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf"/>
 		<cluster name="swagger_documentation_generation" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>
