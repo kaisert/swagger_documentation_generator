@@ -269,6 +269,7 @@ feature
 					swagger_object.set_security_definitions (create {SECURITY_DEFINITIONS_OBJECT}.make)
 				end
 				security_scheme := extract_security_scheme (l_as)
+				swagger_object.security_definitions.security_schemes.extend (security_scheme.ss, security_scheme.s)
 			elseif annotation.same_string ("sa_scope") then
 				scopes := extract_scopes (l_as)
 				known_scopes.extend (scopes.so, scopes.s)

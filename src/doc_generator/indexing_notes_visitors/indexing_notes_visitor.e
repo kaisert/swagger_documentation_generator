@@ -38,7 +38,7 @@ feature
 			end
 		end
 
-feature {INDEXING_NOTES_VISITOR}
+feature --{INDEXING_NOTES_VISITOR}
 
 	current_class: CLASS_AS
 
