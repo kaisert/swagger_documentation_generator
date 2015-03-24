@@ -79,7 +79,8 @@ feature
 			wrapped_is_set := true
 		end
 
-feature --visitor
+feature {SWAGGER_VISITOR}
+	--visitor
 
 	process (v: SWAGGER_VISITOR)
 		do

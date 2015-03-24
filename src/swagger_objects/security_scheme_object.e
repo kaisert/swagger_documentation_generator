@@ -10,9 +10,10 @@ class
 inherit
 
 	SWAGGER_API_OBJECT
+
 create
 	make
-	
+
 feature
 
 	make
@@ -94,7 +95,8 @@ feature
 			scopes := a_scopes
 		end
 
-feature --visitor
+feature {SWAGGER_VISITOR}
+	--visitor
 
 	process (v: SWAGGER_VISITOR)
 		do

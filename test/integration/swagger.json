@@ -1,74 +1,215 @@
 {
-  "swagger": "2.0",
-  "info": {
-    "version": "1.0.0",
-    "title": "TEST_CLASS",
-    "contact": {
-      "name": "API Support",
-      "url": "http:\/\/www.swagger.io\/support",
-      "email": "support@swagger.io"
+  "swagger":"2.0",
+  "info":{
+    "version":"1.0.0",
+    "title":"TEST_CLASS",
+    "contact":{
+      "name":"API Support",
+      "url":"http:\/\/www.swagger.io\/support",
+      "email":"support@swagger.io"
     },
-    "license": {
-      "name": "Apache 2.0",
-      "url": "http:\/\/www.apache.org\/licenses\/LICENSE-2.0.html"
-    },
+    "license":{
+      "name":"Apache 2.0",
+      "url":"http:\/\/www.apache.org\/licenses\/LICENSE-2.0.html"
+    }
   },
-  "paths": {
-
-    "\/test_base_path\/blubb": {
-
-      "get": {
-        "responses": {
-
-          "400": {
-            "description": "blubb",
-          },
-        }
-,
-        "tags": [
-          "tag1", "tag2"
+  "paths":{
+    "\/test_base_path\/blubb":{
+      "get":{
+        "responses":{
+          "400":{
+            "description":"blubb",
+            "schema":{
+              "$ref":"#\/definitions\/Pet"
+            }
+          }
+        },
+        "tags":[
+"tag1",
+"tag2"
         ],
-        "summary": "this is a summary",
-        "description": "description",
-        "operationId": "my first operation",
-        "consumes": [
-          "text\/xml", "text\/json"
+        "summary":"this is a summary",
+        "description":"description",
+        "operationId":"my first operation",
+        "consumes":[
+"text\/xml",
+"text\/json"
         ],
-        "produces": [
-          "image"
+        "produces":[
+"image"
         ],
-        "deprecated": False
+        "deprecated":false
       },
-      "put": {
-        "responses": {
-
-          "400": {
-            "description": "blubb",
-          },
-        }
-,
-        "tags": [
-          "tag1", "tag2"
+      "put":{
+        "responses":{
+          "400":{
+            "description":"blubb",
+            "schema":{
+              "$ref":"#\/definitions\/Pet"
+            }
+          }
+        },
+        "tags":[
+"tag1",
+"tag2"
         ],
-        "summary": "this is a summary",
-        "description": "description",
-        "operationId": "my first operation",
-        "consumes": [
-          "text\/xml", "text\/json"
+        "summary":"this is a summary",
+        "description":"description",
+        "operationId":"my first operation",
+        "consumes":[
+"text\/xml",
+"text\/json"
         ],
-        "produces": [
-          "image"
+        "produces":[
+"image"
         ],
-        "deprecated": False
-      },
+        "deprecated":false,
+        "parameters":[
+{
+            "name":"base_parameter",
+            "in":"body",
+            "required":false,
+            "schema":{
+              "$ref":"#\/definitions\/Pet"
+            },
+            "description":"first parameter"
+          }
+        ]
+      }
     },
+    "\/test_base_path2\/blubb":{
+      "get":{
+        "responses":{
+          "400":{
+            "description":"blubb",
+            "schema":{
+              "$ref":"#\/definitions\/Pet"
+            }
+          }
+        },
+        "tags":[
+"tag1",
+"tag2"
+        ],
+        "summary":"this is a summary",
+        "description":"description",
+        "operationId":"my first operation",
+        "consumes":[
+"text\/xml",
+"text\/json"
+        ],
+        "produces":[
+"image"
+        ],
+        "deprecated":false,
+        "parameters":[
+{
+            "name":"body",
+            "in":"body",
+            "required":false,
+            "schema":{
+              "$ref":"#\/definitions\/Pet"
+            },
+            "description":"first parameter"
+          }
+        ]
+      },
+      "put":{
+        "responses":{
+          "400":{
+            "description":"blubb",
+            "schema":{
+              "$ref":"#\/definitions\/Pet"
+            }
+          }
+        },
+        "tags":[
+"tag1",
+"tag2"
+        ],
+        "summary":"this is a summary",
+        "description":"description",
+        "operationId":"my first operation",
+        "consumes":[
+"text\/xml",
+"text\/json"
+        ],
+        "produces":[
+"image"
+        ],
+        "deprecated":false
+      }
+    },
+    "\/subfolder\/path3\/foo3":{
+      "post":{
+        "responses":{
+          "400":{
+            "description":"blubb",
+            "schema":{
+              "$ref":"#\/definitions\/Pet"
+            }
+          }
+        },
+        "tags":[
+"foo_tag3.2",
+"bar_tag3.2"
+        ],
+        "summary":"this is a summary",
+        "description":"description",
+        "operationId":"my first operation",
+        "consumes":[
+"text\/xml",
+"text\/json"
+        ],
+        "produces":[
+"image"
+        ],
+        "deprecated":false
+      },
+      "delete":{
+        "responses":{
+          "400":{
+            "description":"blubb",
+            "schema":{
+              "$ref":"#\/definitions\/Pet"
+            }
+          }
+        },
+        "tags":[
+"foo_tag3",
+"bar_tag3"
+        ],
+        "summary":"this is a summary",
+        "description":"description",
+        "operationId":"my first operation",
+        "consumes":[
+"text\/xml",
+"text\/json"
+        ],
+        "produces":[
+"image"
+        ],
+        "deprecated":false
+      }
+    }
   },
-  "host": "www.domain.com",
-  "basePath": "\/basePath",
-  "consumes": [
-    "text"
+  "host":"www.domain.com",
+  "basePath":"\/basePath",
+  "consumes":[
+"text"
   ],
-  "produces": [
-    "text"
-  ]
+  "produces":[
+"text"
+  ],
+  "parameter":{
+    "\/test_base_path2\/blubb":{
+      "name":"base_parameter",
+      "in":"body",
+      "required":false,
+      "schema":{
+        "$ref":"#\/definitions\/Pet"
+      },
+      "description":"first parameter"
+    }
+  }
 }

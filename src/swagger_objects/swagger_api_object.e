@@ -12,14 +12,16 @@ feature
 
 	initialize
 		do
-			
 		end
 
-process(v: SWAGGER_VISITOR)
-	-- visitor feature
-	require
-		v_not_void: v /= void
-	deferred
-	end
+feature {SWAGGER_VISITOR}
+	-- visit
+
+	process (v: SWAGGER_VISITOR)
+			-- visitor feature
+		require
+			v_not_void: v /= void
+		deferred
+		end
 
 end

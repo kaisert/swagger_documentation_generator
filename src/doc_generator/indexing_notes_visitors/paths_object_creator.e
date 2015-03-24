@@ -20,7 +20,7 @@ feature {NONE}
 
 	current_base_path: STRING
 
-	schemes: HASH_TABLE [SCHEMA_OBJECT, STRING]
+	known_base_parameters: HASH_TABLE [PARAMETER_OBJECT, STRING]
 
 	current_parameter: LINKED_LIST [PARAMETER_OBJECT]
 
@@ -47,7 +47,7 @@ feature
 			create paths.make
 			create current_parameter.make
 			create current_headers.make
-			create schemes.make (10)
+			create known_schemes.make (10)
 		end
 
 feature
@@ -95,13 +95,16 @@ feature {NONE}
 						path := current_index
 					elseif current_index.starts_with ("external_docs=") then
 						current_index.replace_substring_all ("external_docs=", "")
-						current_operation.set_external_docs (known_external_docs.at(current_index))
+						current_operation.set_external_docs (known_external_docs.at (current_index))
 					end
 				end
 			end
 			path := current_base_path + path
 			if not paths.paths.has (path) then
 				paths.paths.extend (create {PATH_ITEM_OBJECT}.make, path)
+				if known_base_parameters.has (path) then
+					paths.paths [path].parameters.extend (known_base_parameters [path])
+				end
 			end
 			if current_operation.operation.same_string ("get") then
 				paths.paths.at (path).set_get (current_operation)
@@ -127,6 +130,8 @@ feature
 		do
 			current_class := l_as
 			current_base_path := ""
+			create known_base_parameters.make (10)
+			create known_base_schemes.make (10)
 			if attached l_as.top_indexes as indexes then
 				indexes.process (current)
 			end
@@ -147,13 +152,15 @@ feature
 				current_consumes := void
 				current_produces := void
 				current_schemes := void
+				create current_responses.make
 				create known_schemes.make (10)
-				schemes.wipe_out
+				known_schemes.wipe_out
 				indexes.process (current)
 				current_operation.set_tags (current_tags)
 				current_operation.set_consumes (current_consumes)
 				current_operation.set_produces (current_produces)
 				current_operation.set_schemes (current_schemes)
+				current_operation.set_responses (current_responses)
 			end
 		end
 
@@ -170,25 +177,19 @@ feature
 
 	process_indexing_clause_as (l_as: INDEXING_CLAUSE_AS)
 		do
-			if class_indexes_handled then
-				create current_responses.make
-			end
 			across
 				l_as as indexes
 			loop
 				indexes.item.process (current)
 			end
-			if class_indexes_handled then
-				current_operation.set_responses (current_responses)
-			end
 		end
 
 	process_index_as (l_as: INDEX_AS)
 		local
-			scheme: TUPLE[s: STRING; so: SCHEMA_OBJECT]
-			parameter: TUPLE[s: STRING; p: PARAMETER_OBJECT]
-			response: TUPLE[s: STRING; r: RESPONSE_OBJECT]
-			header: TUPLE[s: STRING; h: HEADER_OBJECT]
+			scheme: TUPLE [s: STRING; so: SCHEMA_OBJECT]
+			parameter: TUPLE [s: STRING; p: PARAMETER_OBJECT]
+			response: TUPLE [s: STRING; r: RESPONSE_OBJECT]
+			header: TUPLE [s: STRING; h: HEADER_OBJECT]
 			external_doc: TUPLE [s: STRING; ed: EXTERNAL_DOCUMENTATION_OBJECT]
 			tag: STRING
 		do
@@ -196,15 +197,16 @@ feature
 			if class_indexes_handled then
 				if tag.same_string ("sa_schema") then
 					scheme := extract_schema (l_as)
-					schemes.extend (scheme.so, scheme.s)
+					known_schemes.extend (scheme.so, scheme.s)
 				elseif tag.same_string ("sa_parameter") then
 					if not attached current_operation.parameters then
-						-- TODO
+						current_operation.set_parameter (create {LINKED_LIST [PARAMETER_OBJECT]}.make)
 					end
 					parameter := extract_parameter (l_as)
-					--TODO
+					current_operation.parameters.extend (parameter.p)
+						--TODO REF OBJECT
 				elseif tag.same_string ("sa_response") then
-					response:=extract_response (l_as)
+					response := extract_response (l_as)
 					current_responses.responses.extend (response.r, response.s)
 				elseif tag.same_string ("sa_header") then
 					header := extract_header (l_as)
@@ -235,15 +237,22 @@ feature
 					external_doc := extract_external_doc_def (l_as)
 					known_external_docs.extend (external_doc.ed, external_doc.s)
 				elseif tag.same_string ("sa_security_requirement") then
-				if not attached current_operation.security_requirements then
-					current_operation.set_security (create {LINKED_LIST [SECURITY_REQUIREMENT_OBJECT]}.make)
-				end
-				current_operation.security_requirements.extend (extract_security_requirement (l_as))
+					if not attached current_operation.security_requirements then
+						current_operation.set_security (create {LINKED_LIST [SECURITY_REQUIREMENT_OBJECT]}.make)
+					end
+					current_operation.security_requirements.extend (extract_security_requirement (l_as))
 				end
 			else
-				if tag.same_string ("sa_path") then
-					extract_base_path (l_as)
+				if tag.same_string ("sa_parameter") then
+					parameter := extract_parameter (l_as)
+					known_base_parameters.extend (parameter.p, parameter.s)
+				elseif tag.same_string ("sa_schema") then
+					scheme := extract_schema (l_as)
+					known_base_schemes.extend (scheme.so, scheme.s)
 				end
+			end
+			if tag.same_string ("sa_path") then
+				extract_base_path (l_as)
 			end
 		end
 

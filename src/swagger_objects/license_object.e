@@ -6,35 +6,47 @@ note
 
 class
 	LICENSE_OBJECT
+
 inherit
+
 	SWAGGER_API_OBJECT
+
 create
 	make
+
 feature
+
 	make
-		-- initializes a new instance
+			-- initializes a new instance
 		do
 			initialize
 		end
 
 feature
+
 	name: STRING
-		--license name used for the API
+			--license name used for the API
+
 	url: detachable STRING
-		-- url to the license used for the API
-	set_name(a_name: STRING)
+			-- url to the license used for the API
+
+	set_name (a_name: STRING)
 		do
 			name := a_name
 		end
-	set_url(a_url: STRING)
-		--sets the url
+
+	set_url (a_url: STRING)
+			--sets the url
 		do
 			url := a_url
 		end
 
-feature --visitor
-	process(v: SWAGGER_VISITOR)
+feature {SWAGGER_VISITOR}
+	--visitor
+
+	process (v: SWAGGER_VISITOR)
 		do
-			v.process_license_object(current)
+			v.process_license_object (current)
 		end
+
 end

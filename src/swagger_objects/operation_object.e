@@ -1,4 +1,4 @@
-	note
+note
 	description: "Summary description for {OPERATION_OBJECT}."
 	author: ""
 	date: "$Date$"
@@ -51,7 +51,7 @@ feature
 	parameters: LINKED_LIST [PARAMETER_OBJECT]
 			-- list of parameters that are applicatble for this operation
 
-	references: LINKED_LIST[REFERENCE_OBJECT]
+	references: LINKED_LIST [REFERENCE_OBJECT]
 
 	responses: RESPONSES_OBJECT
 			-- list of possible responses
@@ -182,13 +182,14 @@ feature
 			deprecated := is_deprecated
 		end
 
-	set_security (a_security: LINKED_LIST[SECURITY_REQUIREMENT_OBJECT])
+	set_security (a_security: LINKED_LIST [SECURITY_REQUIREMENT_OBJECT])
 			-- adds a security
 		do
 			security_requirements := a_security
 		end
 
-feature --visitor
+feature {SWAGGER_VISITOR}
+	--visitor
 
 	process (v: SWAGGER_VISITOR)
 		do

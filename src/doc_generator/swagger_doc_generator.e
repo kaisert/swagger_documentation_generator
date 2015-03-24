@@ -14,7 +14,7 @@ inherit
 create
 	make
 
-feature
+feature {NONE}
 
 	parser: EIFFEL_PARSER
 
@@ -26,13 +26,16 @@ feature
 
 	json_creator: JSON_GENERATOR
 
+	json_writer: JSON_WRITER
+
 feature
 
 	make
 		do
 			create annotation_validator
 			create swagger_object_creator.make
-			create json_creator.make
+			create json_creator
+			create json_writer.make
 			initialize
 		end
 
@@ -117,26 +120,29 @@ feature
 						current_file.close
 						if parser.error_count = 0 then
 							classes.extend (parser.root_node)
-							parser.reset
-							initialize
 						else
 							io.putstring ("error while parsing " + f.out + ":%N")
 							io.put_string (parser.error_code.out)
 							io.putstring (parser.error_message + "%N")
 						end
 						parser.wipe_out
-							--elseif files.item. then
+						parser.reset
+						initialize
+					elseif not files.item.utf_8_name.same_string (".") and not files.item.utf_8_name.same_string ("..") then
+						directory_queue.extend (create {DIRECTORY}.make_with_path (directory_queue.item.path.extended_path (files.item)))
 					end
-					directory_queue.forth
 				end
+				directory_queue.forth
 			end
 			io.putstring ("validating annotations%N")
 			annotation_validator.validate_classes (classes)
 			if annotation_validator.all_annotations_valid then
 				io.putstring ("starting to scan classes for swagger annotations%N")
 				swagger_object_creator.create_swagger_object (classes)
+				io.putstring ("createing JSON file structure%N")
+				json_creator.create_json (swagger_object_creator.swagger_object)
 				io.putstring ("creating JSON file%N")
-				json_creator.process_swagger_object (swagger_object_creator.swagger_object)
+				json_writer.create_file (json_creator.swagger_json_object)
 				io.putstring ("done")
 			end
 		end

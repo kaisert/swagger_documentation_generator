@@ -302,6 +302,7 @@ feature {ANNOTATION_VALIDATOR}
 				--result := check_if_valid (l_as, allowed_fields, imposed_fields)
 				--if result then
 			is_body := false
+			create found_fields.make
 			across
 				l_as.index_list as indexes
 			loop

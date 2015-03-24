@@ -6,32 +6,39 @@ note
 
 class
 	HEADERS_OBJECT
+
 inherit
+
 	SWAGGER_API_OBJECT
+
 create
 	make
 
 feature
+
 	make
-		-- initializes a new instance
+			-- initializes a new instance
 		do
 			initialize
 		end
 
 feature
-	headers: HASH_TABLE[HEADER_OBJECT, STRING]
-		--the headers
 
-	set_headers(a_header: HASH_TABLE[HEADER_OBJECT, STRING])
-		-- adds a header
+	headers: HASH_TABLE [HEADER_OBJECT, STRING]
+			--the headers
+
+	set_headers (a_header: HASH_TABLE [HEADER_OBJECT, STRING])
+			-- adds a header
 		do
 			headers := a_header
 		end
 
-feature --visitor
-	process(v: SWAGGER_VISITOR)
+feature {SWAGGER_VISITOR}
+	--visitor
+
+	process (v: SWAGGER_VISITOR)
 		do
-			v.process_headers_object(current)
+			v.process_headers_object (current)
 		end
 
 end

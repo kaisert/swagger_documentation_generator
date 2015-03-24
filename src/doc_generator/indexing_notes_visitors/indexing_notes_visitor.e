@@ -46,6 +46,8 @@ feature --{INDEXING_NOTES_VISITOR}
 
 	known_schemes: HASH_TABLE [SCHEMA_OBJECT, STRING]
 
+	known_base_schemes: HASH_TABLE [SCHEMA_OBJECT, STRING]
+
 	known_headers: HASH_TABLE [HEADER_OBJECT, STRING]
 
 	known_external_docs: HASH_TABLE [EXTERNAL_DOCUMENTATION_OBJECT, STRING]
@@ -242,7 +244,7 @@ feature {INDEXING_NOTES_VISITOR}
 			is_body_parameter: BOOLEAN
 			parameter_body: PARAMETER_BODY_OBJECT
 			parameter_other: PARAMETER_OTHER_OBJECT
-			name, in, schema_name, current_value, description: STRING
+			in, name, schema_name, current_value, description: STRING
 			is_required: BOOLEAN
 		do
 			create Result.default_create
@@ -253,7 +255,7 @@ feature {INDEXING_NOTES_VISITOR}
 					current_value := index.value_32.twin
 					if current_value.starts_with ("name=") then
 						current_value.replace_substring_all ("name=", "")
-						result.s := current_value
+						name := current_value
 					elseif current_value.starts_with ("in=") then
 						is_body_parameter := index.value_32.same_string ("in=body")
 						current_value.replace_substring_all ("in=", "")
@@ -267,6 +269,9 @@ feature {INDEXING_NOTES_VISITOR}
 					elseif current_value.starts_with ("description=") then
 						current_value.replace_substring_all ("description=", "")
 						description := current_value
+					elseif current_value.starts_with ("path=") then
+						current_value.replace_substring_all ("path=", "")
+						result.s := current_value
 							--TODO: non-body parameter
 					end
 				end
@@ -276,7 +281,11 @@ feature {INDEXING_NOTES_VISITOR}
 				parameter_body.set_name (name)
 				parameter_body.set_in (in)
 				parameter_body.set_required (is_required)
-				parameter_body.set_schema (known_schemes.at (schema_name))
+				if attached known_base_schemes and then known_base_schemes.has (schema_name) then
+					parameter_body.set_schema (known_base_schemes [schema_name])
+				elseif known_schemes.has (schema_name) then
+					parameter_body.set_schema (known_schemes.at (schema_name))
+				end
 				parameter_body.set_descrption (description)
 				result.p := parameter_body
 			else

@@ -48,7 +48,8 @@ feature
 			external_docs := a_external_doc
 		end
 
-feature --visitor
+feature {SWAGGER_VISITOR}
+	--visitor
 
 	process (v: SWAGGER_VISITOR)
 		do

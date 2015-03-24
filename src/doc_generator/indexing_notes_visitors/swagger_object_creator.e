@@ -188,6 +188,8 @@ feature
 
 	process_class_as (l_as: CLASS_AS)
 		do
+			create known_schemes.make (10)
+			create known_base_schemes.make (10)
 			current_class := l_as
 			l_as.top_indexes.process (current)
 		end
@@ -208,7 +210,6 @@ feature
 				create known_scopes.make (10)
 				create known_headers.make (10)
 				create known_external_docs.make (10)
-				create known_schemes.make (10)
 				indexes.item.process (current)
 			end
 		end

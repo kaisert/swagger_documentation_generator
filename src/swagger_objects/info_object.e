@@ -78,7 +78,8 @@ feature
 			license := a_license
 		end
 
-feature --visitor
+feature {SWAGGER_VISITOR}
+	--visitor
 
 	process (v: SWAGGER_VISITOR)
 		do

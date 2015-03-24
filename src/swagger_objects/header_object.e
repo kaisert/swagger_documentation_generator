@@ -66,7 +66,6 @@ feature
 
 	multiple_of: REAL
 
-
 	maximum_is_set: BOOLEAN
 			-- flag, indicating if maximum was set or not
 
@@ -99,7 +98,7 @@ feature
 
 	multiple_of_is_set: BOOLEAN
 			-- flag, indicating if multiple_of was set or not
-			
+
 	set_description (a_description: STRING)
 			-- sets the description
 		do
@@ -205,7 +204,8 @@ feature
 			multiple_of_is_set := true
 		end
 
-feature --visitor
+feature {SWAGGER_VISITOR}
+	--visitor
 
 	process (v: SWAGGER_VISITOR)
 		do

@@ -163,13 +163,13 @@ feature
 			security_definitions := a_security_definitions
 		end
 
-	set_security (a_security: LINKED_LIST[SECURITY_REQUIREMENT_OBJECT])
+	set_security (a_security: LINKED_LIST [SECURITY_REQUIREMENT_OBJECT])
 			-- adds a security
 		do
 			security_requirements := a_security
 		end
 
-	set_tags (some_tags: LINKED_LIST[TAG_OBJECT])
+	set_tags (some_tags: LINKED_LIST [TAG_OBJECT])
 			-- adds a tag
 		do
 			tags := some_tags
@@ -181,10 +181,12 @@ feature
 			external_docs := a_external_doc
 		end
 
-feature --visitor
+feature {SWAGGER_VISITOR}
+	--visitor
 
 	process (v: SWAGGER_VISITOR)
 		do
 			v.process_swagger_object (current)
 		end
+
 end

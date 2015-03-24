@@ -20,7 +20,7 @@ feature
 			-- initializes a new instance
 		do
 			initialize
-			scopes.make(10)
+			scopes.make (10)
 		end
 
 feature
@@ -34,7 +34,8 @@ feature
 			scopes := some_scopes
 		end
 
-feature --visitor
+feature {SWAGGER_VISITOR}
+	--visitor
 
 	process (v: SWAGGER_VISITOR)
 		do

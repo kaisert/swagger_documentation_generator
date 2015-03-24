@@ -8,6 +8,7 @@ class
 	INFO_OBJECT_CREATOR
 inherit
 	INDEXING_NOTES_VISITOR
+
 feature {NONE}
 	extract_info(l_as: INDEX_AS): INFO_OBJECT
 		-- extracts the info object
