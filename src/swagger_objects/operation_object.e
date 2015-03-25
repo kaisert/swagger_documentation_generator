@@ -146,7 +146,7 @@ feature
 			produces.extend (a_produce)
 		end
 
-	set_parameter (some_parameters: LINKED_LIST [PARAMETER_OBJECT])
+	set_parameters (some_parameters: LINKED_LIST [PARAMETER_OBJECT])
 			-- sets the parameters
 		do
 			parameters := some_parameters
@@ -186,6 +186,11 @@ feature
 			-- adds a security
 		do
 			security_requirements := a_security
+		end
+
+	set_references(some_references: LINKED_LIST[REFERENCE_OBJECT])
+		do
+			references := some_references
 		end
 
 feature {SWAGGER_VISITOR}

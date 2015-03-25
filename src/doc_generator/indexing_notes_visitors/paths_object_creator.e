@@ -123,6 +123,18 @@ feature {NONE}
 			end
 		end
 
+		extract_reference (l_as: INDEX_AS): REFERENCE_OBJECT
+		local
+			current_value: STRING
+		do
+			if attached {STRING_AS} l_as.index_list.first as s then
+				create result.make
+				current_value := s.value_32.twin
+				current_value.replace_substring_all ("ref=", "")
+				Result.set_ref (current_value)
+			end
+		end
+
 feature
 	-- visitor
 
@@ -132,6 +144,7 @@ feature
 			current_base_path := ""
 			create known_base_parameters.make (10)
 			create known_base_schemes.make (10)
+			create known_xmls.make (10)
 			if attached l_as.top_indexes as indexes then
 				indexes.process (current)
 			end
@@ -191,6 +204,7 @@ feature
 			response: TUPLE [s: STRING; r: RESPONSE_OBJECT]
 			header: TUPLE [s: STRING; h: HEADER_OBJECT]
 			external_doc: TUPLE [s: STRING; ed: EXTERNAL_DOCUMENTATION_OBJECT]
+			xml: XML_OBJECT
 			tag: STRING
 		do
 			tag := l_as.tag.string_value_32
@@ -199,12 +213,19 @@ feature
 					scheme := extract_schema (l_as)
 					known_schemes.extend (scheme.so, scheme.s)
 				elseif tag.same_string ("sa_parameter") then
-					if not attached current_operation.parameters then
-						current_operation.set_parameter (create {LINKED_LIST [PARAMETER_OBJECT]}.make)
+					if attached {STRING_AS} l_as.index_list.first as s then
+						if s.value_32.starts_with ("ref") then
+							if not attached current_operation.references then
+								current_operation.set_references (create {LINKED_LIST [REFERENCE_OBJECT]}.make)
+							end
+							current_operation.references.extend (extract_reference (l_as))
+						else
+							if not attached current_operation.parameters then
+								current_operation.set_parameters (create {LINKED_LIST [PARAMETER_OBJECT]}.make)
+							end
+						end
+						current_operation.parameters.extend (extract_parameter (l_as).p)
 					end
-					parameter := extract_parameter (l_as)
-					current_operation.parameters.extend (parameter.p)
-						--TODO REF OBJECT
 				elseif tag.same_string ("sa_response") then
 					response := extract_response (l_as)
 					current_responses.responses.extend (response.r, response.s)
@@ -253,6 +274,9 @@ feature
 			end
 			if tag.same_string ("sa_path") then
 				extract_base_path (l_as)
+			elseif tag.same_string ("sa_xml") then
+				xml := extract_xml (l_as)
+				known_xmls.extend (xml, xml.name)
 			end
 		end
 

@@ -9,9 +9,7 @@ deferred class
 
 feature {NONE}
 
-
-
-	there_exists (list: LIST[STRING]; test: PREDICATE [ANY, TUPLE [STRING]]): BOOLEAN
+	there_exists (list: LIST [STRING]; test: PREDICATE [ANY, TUPLE [STRING]]): BOOLEAN
 			-- own implementation of 'there_exists' of class LINEAR
 			-- since an agent of type FUNCTION[ANY, TUPLE[G], BOOLEAN] gets interpreted
 			-- as PREDICATE[ANY, TUPLE[G]] the call causes a cat-call every time.
@@ -29,7 +27,7 @@ feature {NONE}
 			end
 		end
 
-	are_same_string(a,b: STRING): BOOLEAN
+	are_same_string (a, b: STRING): BOOLEAN
 		do
 			result := a.same_string (b)
 		end
@@ -47,7 +45,7 @@ feature {NONE}
 	do_fields_exist (l_as: INDEX_AS; imposed_fields: LINKED_LIST [STRING]): BOOLEAN
 		local
 			found_fields: LINKED_LIST [STRING]
-			field_value_pair: LIST[STRING_32]
+			field_value_pair: LIST [STRING_32]
 			intermediate_result: BOOLEAN
 		do
 			result := true
@@ -56,7 +54,7 @@ feature {NONE}
 				l_as.index_list as indexes
 			loop
 				if attached {STRING_AS} indexes.item as item then
-					field_value_pair := item.value_32.split('=')
+					field_value_pair := item.value_32.split ('=')
 					found_fields.extend (field_value_pair.first)
 				end
 			end
@@ -89,7 +87,7 @@ feature {NONE}
 				if attached {STRING_AS} indexes.item as item then
 					current_value := item.value_32
 					current_value := current_value.split ('=').first
-					intermediate_result := there_exists(allowed_fields, agent are_same_string(current_value, ?))
+					intermediate_result := there_exists (allowed_fields, agent are_same_string(current_value, ?))
 					result := result and intermediate_result
 					if not intermediate_result then
 						wrong_attribute := current_value
@@ -268,60 +266,83 @@ feature {ANNOTATION_VALIDATOR}
 
 	validate_parameter_annotation (l_as: INDEX_AS)
 		local
-			allowed_fields, imposed_fields, found_fields: LINKED_LIST [STRING]
-			is_body, is_array: BOOLEAN
+			allowed_fields, imposed_fields: LINKED_LIST [STRING]
+			found_fields: HASH_TABLE [STRING, STRING]
+			field_value_pair: TUPLE [field: STRING; value: STRING]
+			is_reference, is_body, is_array: BOOLEAN
 			current_value: STRING
 		do
-			create allowed_fields.make
-			create imposed_fields.make
-			allowed_fields.extend ("name")
-			allowed_fields.extend ("in")
-			allowed_fields.extend ("description")
-			allowed_fields.extend ("required")
-			allowed_fields.extend ("schema")
-			allowed_fields.extend ("type")
-			allowed_fields.extend ("format")
-			allowed_fields.extend ("items")
-			allowed_fields.extend ("collection_format")
-			allowed_fields.extend ("default")
-			allowed_fields.extend ("maximum")
-			allowed_fields.extend ("exclusive_maximum")
-			allowed_fields.extend ("minimum")
-			allowed_fields.extend ("exclusive_minimum")
-			allowed_fields.extend ("max_length")
-			allowed_fields.extend ("min_length")
-			allowed_fields.extend ("pattern")
-			allowed_fields.extend ("max_items")
-			allowed_fields.extend ("min_items")
-			allowed_fields.extend ("unique_items")
-			allowed_fields.extend ("enum")
-			allowed_fields.extend ("multiple_of")
-			imposed_fields.extend ("name")
-			imposed_fields.extend ("in")
-			imposed_fields.extend ("required")
-				--result := check_if_valid (l_as, allowed_fields, imposed_fields)
-				--if result then
-			is_body := false
-			create found_fields.make
+			is_reference := false
 			across
-				l_as.index_list as indexes
+				l_as.index_list as index_list
 			loop
-				if attached {STRING_AS} indexes.item as item then
-					current_value := item.value_32
-					current_value := current_value.split ('=').first
-					if current_value.split ('=').first.same_string ("in") then
-						is_body := is_body or current_value.split ('=').at (1).same_string ("body")
-					elseif current_value.split ('=').first.same_string ("type") then
-						is_array := current_value.split ('=').at (1).same_string ("array")
+				if attached {STRING_AS} index_list.item as i then
+					if i.value_32.starts_with ("ref=") then
+						is_reference := true
+						if l_as.index_list.count /= 1 then
+							set_error_msg (l_as)
+						end
 					end
-						--result := result and allowed_fields.has (current_value)
-					found_fields.extend (current_value)
 				end
-					--end
-					-- TODO
-					--result := result and (is_body implies found_fields.has ("schema")) and (not is_body implies found_fields.has ("type"))
 			end
-				--result := result and (is_array implies found_fields.has ("items"))
+			if not is_reference then
+				create allowed_fields.make
+				create imposed_fields.make
+				allowed_fields.extend ("name")
+				allowed_fields.extend ("in")
+				allowed_fields.extend ("description")
+				allowed_fields.extend ("required")
+				imposed_fields.extend ("name")
+				imposed_fields.extend ("in")
+				imposed_fields.extend ("required")
+				is_body := false
+				create found_fields.make (20)
+				across
+					l_as.index_list as indexes
+				loop
+					if attached {STRING_AS} indexes.item as item then
+						create field_value_pair.default_create
+						current_value := item.value_32
+						field_value_pair.field := current_value.split ('=') [1]
+						field_value_pair.value := current_value.split ('=') [2]
+						if field_value_pair.field.same_string ("in") then
+							is_body := is_body or field_value_pair.value.same_string ("body")
+						elseif field_value_pair.field.same_string ("type") then
+							is_array := is_array or field_value_pair.value.same_string ("array")
+						end
+						found_fields.extend (field_value_pair.value, field_value_pair.field)
+					end
+				end
+				if is_body then
+					allowed_fields.extend ("schema")
+					imposed_fields.extend ("schema")
+				else
+					allowed_fields.extend ("type")
+					allowed_fields.extend ("format")
+					allowed_fields.extend ("items")
+					allowed_fields.extend ("collection_format")
+					allowed_fields.extend ("default")
+					allowed_fields.extend ("maximum")
+					allowed_fields.extend ("exclusive_maximum")
+					allowed_fields.extend ("minimum")
+					allowed_fields.extend ("exclusive_minimum")
+					allowed_fields.extend ("max_length")
+					allowed_fields.extend ("min_length")
+					allowed_fields.extend ("pattern")
+					allowed_fields.extend ("max_items")
+					allowed_fields.extend ("min_items")
+					allowed_fields.extend ("unique_items")
+					allowed_fields.extend ("enum")
+					allowed_fields.extend ("multiple_of")
+					imposed_fields.extend ("type")
+				end
+				if is_array then
+					imposed_fields.extend ("items")
+				end
+				if not is_valid_annotation (l_as, allowed_fields, imposed_fields) then
+					set_error_msg (l_as)
+				end
+			end
 		end
 
 	validate_base_path_annotation (l_as: INDEX_AS)
@@ -425,10 +446,23 @@ feature {ANNOTATION_VALIDATOR}
 
 	validate_scope_annotation (l_as: INDEX_AS)
 		do
+			if not is_valid_type (l_as) then
+				set_error_msg (l_as)
+			end
 		end
 
 	validate_external_doc_annotation (l_as: INDEX_AS)
+		local
+			allowed_fields, imposed_fields: LINKED_LIST [STRING]
 		do
+			create allowed_fields.make
+			create imposed_fields.make
+			allowed_fields.extend ("url")
+			allowed_fields.extend ("description")
+			imposed_fields.extend ("url")
+			if not is_valid_annotation (l_as, allowed_fields, imposed_fields) then
+				set_error_msg (l_as)
+			end
 		end
 
 end
