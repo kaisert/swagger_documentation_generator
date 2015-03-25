@@ -37,11 +37,11 @@ note
   sa_spec: "swagger=2.0", "host=www.domain.com", "base_path=/basePath"
   
   sa_info: "version=1.0.0", "title=my application", "description=my description", "terms_of_service=my terms of service"
-sa_contact: "name=API Support", "url=http://www.swagger.io/support", "email=support@swagger.io"
-sa_license: "name=Apache 2.0", "url=http://www.apache.org/licenses/LICENSE-2.0.html"
+  sa_contact: "name=API Support", "url=http://www.swagger.io/support", "email=support@swagger.io"
+  sa_license: "name=Apache 2.0", "url=http://www.apache.org/licenses/LICENSE-2.0.html"
 ```
 details about the specific fields of contact and licence can be taken from the official specifications ([conact object](https://github.com/swagger-api/swagger-spec/blob/master/versions/2.0.md#contactObject),[licence object]( https://github.com/swagger-api/swagger-spec/blob/master/versions/2.0.md#licenseObject))
 
 The sa_spec and the sa_info annotation is the absolute minimum to define a swagger documentation. Without these parameters and their required fields no JSON file can be generated.
-
+further 
 
