@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {JSON_BOOLEAN}."
+	description: "object representing a JSON boolean value"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,7 @@ create
 	make
 
 feature
+	-- access
 
 	make (a_value: BOOLEAN)
 		do
@@ -23,7 +24,7 @@ feature
 
 	value: BOOLEAN
 
-feature
+feature {JSON_VISITOR}
 	--visit
 
 	process (v: JSON_VISITOR)

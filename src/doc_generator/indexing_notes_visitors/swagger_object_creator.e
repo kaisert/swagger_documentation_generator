@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {SWAGGER_OBJECT_CREATOR}."
-	author: ""
+	description: "Extracts the swagger object from annotations"
+	author: "Tobias Kaiser"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -15,6 +15,7 @@ create
 	make
 
 feature
+	-- object creation
 
 	make
 			--initializes a new instance
@@ -25,21 +26,28 @@ feature
 			create known_schemes.make (10)
 		end
 
-feature
+feature {NONE}
 
 	info_visitor: INFO_OBJECT_CREATOR
+			-- visitor for info object creation
 
 	paths_visitor: PATHS_OBJECT_CREATOR
+			-- visitor for paths object creation
 
 	definitions: DEFINITIONS_OBJECT
+			-- definitions found, used for later reference
 
 	known_scopes: HASH_TABLE [SCOPES_OBJECT, STRING]
+			-- scopes found, used for later reference
 
 feature
+	-- access
 
 	swagger_object: SWAGGER_OBJECT
+			-- the extracted swagger object
 
-feature
+feature {NONE}
+	-- helper functions to extract the swagger objects
 
 	extract_swagger_spec (l_as: INDEX_AS)
 			-- extracts the swagger specification
@@ -77,37 +85,37 @@ feature
 		do
 			create Result.default_create
 			result.ss := create {SECURITY_SCHEME_OBJECT}.make
-			current_index := ""
 			across
 				l_as.index_list as index_list
 			loop
 				if attached {STRING_AS} index_list.item as s then
-					current_index.copy (s.value_32)
-				end
-				if current_index.starts_with ("type=") then
-					current_index.replace_substring_all ("type=", "")
-					result.ss.set_type (current_index.twin)
-				elseif current_index.starts_with ("description=") then
-					current_index.replace_substring_all ("description=", "")
-					result.ss.set_description (current_index.twin)
-				elseif current_index.starts_with ("name=") then
-					current_index.replace_substring_all ("name=", "")
-					result.ss.set_name (current_index.twin)
-				elseif current_index.starts_with ("in=") then
-					current_index.replace_substring_all ("in=", "")
-					result.ss.set_in (current_index.twin)
-				elseif current_index.starts_with ("flow=") then
-					current_index.replace_substring_all ("flow=", "")
-					result.ss.set_flow (current_index.twin)
-				elseif current_index.starts_with ("authorization_url=") then
-					current_index.replace_substring_all ("authorization_url=", "")
-					result.ss.set_authorization_url (current_index.twin)
-				elseif current_index.starts_with ("token_url=") then
-					current_index.replace_substring_all ("token_url=", "")
-					result.ss.set_token_url (current_index.twin)
-				elseif current_index.starts_with ("scope=") then
-					current_index.replace_substring_all ("scope=", "")
-					Result.ss.set_scopes (known_scopes.at (current_index))
+					current_index := s.value_32.twin
+					if current_index.starts_with ("type=") then
+						current_index.replace_substring_all ("type=", "")
+						result.ss.set_type (current_index.twin)
+					elseif current_index.starts_with ("description=") then
+						current_index.replace_substring_all ("description=", "")
+						result.ss.set_description (current_index.twin)
+					elseif current_index.starts_with ("name=") then
+						current_index.replace_substring_all ("name=", "")
+						result.ss.set_name (current_index.twin)
+						result.s := current_index.twin
+					elseif current_index.starts_with ("in=") then
+						current_index.replace_substring_all ("in=", "")
+						result.ss.set_in (current_index.twin)
+					elseif current_index.starts_with ("flow=") then
+						current_index.replace_substring_all ("flow=", "")
+						result.ss.set_flow (current_index.twin)
+					elseif current_index.starts_with ("authorization_url=") then
+						current_index.replace_substring_all ("authorization_url=", "")
+						result.ss.set_authorization_url (current_index.twin)
+					elseif current_index.starts_with ("token_url=") then
+						current_index.replace_substring_all ("token_url=", "")
+						result.ss.set_token_url (current_index.twin)
+					elseif current_index.starts_with ("scope=") then
+						current_index.replace_substring_all ("scope=", "")
+						Result.ss.set_scopes (known_scopes.at (current_index))
+					end
 				end
 			end
 		end
@@ -123,13 +131,13 @@ feature
 				l_as.index_list as index_list
 			loop
 				if attached {STRING_AS} index_list.item as s then
-					current_index.copy (s.value_32)
+					current_index := s.value_32.twin
 				end
 				field_value_pair := current_index.split ('=')
 				if field_value_pair.first.same_string ("name") then
-					result.s := field_value_pair.at (1)
+					result.s := field_value_pair.at (2)
 				else
-					result.so.scopes.extend (field_value_pair.at (1), field_value_pair.at (0))
+					result.so.scopes.extend (field_value_pair.at (2), field_value_pair.at (1))
 				end
 			end
 		end
@@ -143,7 +151,7 @@ feature
 				l_as.index_list as index_list
 			loop
 				if attached {STRING_AS} index_list.item as s then
-					current_index.copy (s.value_32)
+					current_index := s.value_32.twin
 				end
 				if current_index.starts_with ("name=") then
 					current_index.replace_substring_all ("name=", "")
@@ -166,8 +174,10 @@ feature
 		end
 
 feature
+	-- access
 
 	create_swagger_object (classes: LINKED_LIST [CLASS_AS])
+			-- creates the swagger object form a list of classes, that can be further processed
 		do
 			across
 				classes as c
@@ -183,8 +193,8 @@ feature
 			swagger_object.set_paths (paths_visitor.paths)
 		end
 
-feature
-	--visitor
+feature {AST_EIFFEL}
+	--visitor implementation
 
 	process_class_as (l_as: CLASS_AS)
 		do
@@ -213,8 +223,6 @@ feature
 				indexes.item.process (current)
 			end
 		end
-
-		--visitor
 
 	process_index_as (l_as: INDEX_AS)
 		local
@@ -265,7 +273,7 @@ feature
 				end
 				parameter := extract_parameter (l_as)
 				swagger_object.parameters.parameters.extend (parameter.p, parameter.s)
-			elseif annotation.same_string ("sa_security_scheme") then
+			elseif annotation.same_string ("sa_security_definition") then
 				if not attached swagger_object.security_definitions then
 					swagger_object.set_security_definitions (create {SECURITY_DEFINITIONS_OBJECT}.make)
 				end

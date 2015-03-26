@@ -20,7 +20,7 @@ feature
 			-- initializes a new instance
 		do
 			initialize
-			scopes.make (10)
+			create scopes.make (10)
 		end
 
 feature

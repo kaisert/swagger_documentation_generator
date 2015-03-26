@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {SWAGGER_DOC_GENERATOR}."
-	author: ""
+	description: "Generates a JSON file representing a swagger documentation. The documentation is created from annotations within the note section of the Eiffel code"
+	author: "Tobias kaiser"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -17,20 +17,28 @@ create
 feature {NONE}
 
 	parser: EIFFEL_PARSER
+			-- parses Eiffel class files
 
 	factory: AST_FACTORY
+			-- ast node factory
 
 	swagger_object_creator: SWAGGER_OBJECT_CREATOR
+			-- creates a swagger object from eiffel classes
 
 	annotation_validator: ANNOTATION_VALIDATOR_VISITOR
+			-- validates the annotations made within the eiffel code
 
 	json_creator: JSON_GENERATOR
+			-- creates a json object structure from a swagger object
 
 	json_writer: JSON_WRITER
+			-- writes a json object to a *.json file
 
 feature
+	-- creation
 
 	make
+			-- initializes a new instance
 		do
 			create annotation_validator
 			create swagger_object_creator.make
@@ -84,14 +92,10 @@ feature {NONE}
 			end
 		end
 
-feature {NONE}
-
-	swagger_object: SWAGGER_OBJECT
-
 feature
 
 	create_documentation (path_to_folder: STRING)
-			-- creates documentation from a *.e file
+			-- creates documentation from a folder containing *.e files (also searches subfolders)
 		require
 			path_not_void: path_to_folder /= void
 		local
@@ -111,6 +115,7 @@ feature
 					directory_queue.item.entries as files
 				loop
 					if attached files.item as f and then attached files.item.extension as e and then files.item.extension.same_string ("e") then
+							-- parse the found .e file
 						create current_file.make_with_path (directory_queue.item.path.extended_path (f))
 						current_file.open_read
 						io.putstring ("parsing file " + f.out + "%N")
@@ -119,6 +124,7 @@ feature
 						end
 						current_file.close
 						if parser.error_count = 0 then
+								-- when no error occured safe the class node
 							classes.extend (parser.root_node)
 						else
 							io.putstring ("error while parsing " + f.out + ":%N")
@@ -129,6 +135,7 @@ feature
 						parser.reset
 						initialize
 					elseif not files.item.utf_8_name.same_string (".") and not files.item.utf_8_name.same_string ("..") then
+							-- store all subfolder for further investigation
 						directory_queue.extend (create {DIRECTORY}.make_with_path (directory_queue.item.path.extended_path (files.item)))
 					end
 				end
@@ -136,13 +143,17 @@ feature
 			end
 			io.putstring ("validating annotations%N")
 			annotation_validator.validate_classes (classes)
+				-- validate the annotations of the classes
 			if annotation_validator.all_annotations_valid then
 				io.putstring ("starting to scan classes for swagger annotations%N")
+					-- create the swagger object
 				swagger_object_creator.create_swagger_object (classes)
 				io.putstring ("createing JSON file structure%N")
+					-- create the json object
 				json_creator.create_json (swagger_object_creator.swagger_object)
 				io.putstring ("creating JSON file%N")
-				json_writer.create_file (json_creator.swagger_json_object)
+					-- write the json object
+				json_writer.create_file ("swagger", json_creator.swagger_json_object)
 				io.putstring ("done")
 			end
 		end

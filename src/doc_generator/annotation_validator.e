@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {ANNOTATION_VALIDATOR}."
-	author: ""
+	description: "Deferred class, base of a validator, checking annotaions made to produce a swagger api documentation."
+	author: "Tobias Kaiser"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -8,6 +8,7 @@ deferred class
 	ANNOTATION_VALIDATOR
 
 feature {NONE}
+	-- helper features
 
 	there_exists (list: LIST [STRING]; test: PREDICATE [ANY, TUPLE [STRING]]): BOOLEAN
 			-- own implementation of 'there_exists' of class LINEAR
@@ -33,6 +34,7 @@ feature {NONE}
 		end
 
 	is_valid_type (l_as: INDEX_AS): BOOLEAN
+			-- checks if all annotations are of type {STRING_AS}
 		do
 			result := true
 			across
@@ -43,6 +45,7 @@ feature {NONE}
 		end
 
 	do_fields_exist (l_as: INDEX_AS; imposed_fields: LINKED_LIST [STRING]): BOOLEAN
+			-- checks if the required fields are defined
 		local
 			found_fields: LINKED_LIST [STRING]
 			field_value_pair: LIST [STRING_32]
@@ -73,6 +76,7 @@ feature {NONE}
 		end
 
 	is_valid_annotation (l_as: INDEX_AS; allowed_fields, imposed_fields: LINKED_LIST [STRING]): BOOLEAN
+			-- checks if the annotaiton is valid
 		local
 			found_fields: LINKED_LIST [STRING]
 			current_value: STRING
@@ -104,14 +108,21 @@ feature {NONE}
 feature {ANNOTATION_VALIDATOR}
 
 	error_msg: STRING
+			-- the error message in case of wrong usage of the annations
 
 	error_found, valid_type: BOOLEAN
+			-- flag indicating if an error was found and if the type of the annotations is valid
 
 feature {ANNOTATION_VALIDATOR}
 
-	wrong_attribute, missing_field: STRING
+	wrong_attribute: STRING
+			-- not recognized attribute if found
+
+	missing_field: STRING
+			-- field not specified, that are actually required
 
 	set_error_msg (l_as: INDEX_AS)
+			-- sets the error message
 		deferred
 		end
 
@@ -288,6 +299,7 @@ feature {ANNOTATION_VALIDATOR}
 			if not is_reference then
 				create allowed_fields.make
 				create imposed_fields.make
+				allowed_fields.extend ("path")
 				allowed_fields.extend ("name")
 				allowed_fields.extend ("in")
 				allowed_fields.extend ("description")
@@ -448,6 +460,16 @@ feature {ANNOTATION_VALIDATOR}
 		do
 			if not is_valid_type (l_as) then
 				set_error_msg (l_as)
+			else
+				across
+					l_as.index_list as index_list
+				loop
+					if attached {STRING_AS} index_list.item as index then
+						if not index.value_32.has ('=') then
+							set_error_msg (l_as)
+						end
+					end
+				end
 			end
 		end
 

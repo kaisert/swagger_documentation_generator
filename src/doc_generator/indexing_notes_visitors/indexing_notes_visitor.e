@@ -38,23 +38,31 @@ feature
 			end
 		end
 
-feature --{INDEXING_NOTES_VISITOR}
+feature {INDEXING_NOTES_VISITOR}
 
 	current_class: CLASS_AS
+		-- class currently being processed
 
 	current_headers: HEADERS_OBJECT
+		-- headers currently being processed
 
 	known_schemes: HASH_TABLE [SCHEMA_OBJECT, STRING]
+		-- found schemes, used for later reference
 
 	known_base_schemes: HASH_TABLE [SCHEMA_OBJECT, STRING]
+	-- found schemes in class, used for later reference
 
 	known_headers: HASH_TABLE [HEADER_OBJECT, STRING]
+	-- found headers, used for later reference
 
 	known_external_docs: HASH_TABLE [EXTERNAL_DOCUMENTATION_OBJECT, STRING]
+	-- found external documentation declarations, used for later reference
 
-	known_xmls: HASH_TABLE[XML_OBJECT, STRING]
+	known_xmls: HASH_TABLE [XML_OBJECT, STRING]
+	-- found xml declarations, used for later reference
 
 feature {INDEXING_NOTES_VISITOR}
+	-- extraction features. Helping to create Swagger object from annotations
 
 	extract_list (l_as: INDEX_AS; list: LINKED_LIST [STRING])
 		do
@@ -434,8 +442,8 @@ feature {INDEXING_NOTES_VISITOR}
 			end
 		end
 
-feature
-	-- visitor implementation
+feature {AST_EIFFEL, INDEXING_NOTES_VISITOR}
+	-- visitor
 
 	process_class_as (l_as: CLASS_AS)
 		deferred

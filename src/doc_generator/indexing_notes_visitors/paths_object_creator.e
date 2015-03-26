@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {PATHS_OBJECT_CREATOR}."
-	author: ""
+	description: "Extracts the path object"
+	author: "Tobias Kaiser"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -17,28 +17,40 @@ create
 feature {NONE}
 
 	class_indexes_handled: BOOLEAN
+			-- flag indicating if the class indexes were handled
 
 	current_base_path: STRING
+			-- base path of the current class
 
 	known_base_parameters: HASH_TABLE [PARAMETER_OBJECT, STRING]
+			-- found parameters, used to reference later on
 
 	current_parameter: LINKED_LIST [PARAMETER_OBJECT]
+			-- parameters of operation, used for later reference
 
 	current_responses: RESPONSES_OBJECT
+			-- found responses. used for later reference
 
 	current_refs: LINKED_LIST [REFERENCE_OBJECT]
+			-- found references, used for later reference
 
 	current_operation: OPERATION_OBJECT
+			-- operation currently being processed
 
 	current_tags: LINKED_LIST [STRING]
+			-- found tags, used for later reference
 
 	current_consumes: LINKED_LIST [STRING]
+			-- consumes annotations found, used for later reference
 
 	current_produces: LINKED_LIST [STRING]
+			-- produces annotaitons found, used for later references
 
 	current_schemes: LINKED_LIST [STRING]
+			-- schemes found, used for later references
 
 feature
+	-- creation
 
 	make
 			-- initializes a new instance
@@ -53,8 +65,10 @@ feature
 feature
 
 	paths: PATHS_OBJECT
+			-- the extracted paths object
 
 feature {NONE}
+	-- helper function for object extraction
 
 	extract_base_path (l_as: INDEX_AS)
 		do
@@ -123,7 +137,7 @@ feature {NONE}
 			end
 		end
 
-		extract_reference (l_as: INDEX_AS): REFERENCE_OBJECT
+	extract_reference (l_as: INDEX_AS): REFERENCE_OBJECT
 		local
 			current_value: STRING
 		do
@@ -135,8 +149,8 @@ feature {NONE}
 			end
 		end
 
-feature
-	-- visitor
+feature {AST_EIFFEL}
+	-- visitor implementation
 
 	process_class_as (l_as: CLASS_AS)
 		do

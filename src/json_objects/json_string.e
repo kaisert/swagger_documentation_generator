@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {JSON_STRING}."
-	author: ""
+	description: "Object representing a JSON string"
+	author: "Tobias Kaiser"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -17,13 +17,14 @@ create
 feature
 
 	make (a_value: STRING)
+			-- creates a new instance
 		do
 			value := a_value
 		end
 
 	value: STRING
 
-feature
+feature {JSON_VISITOR}
 	-- visit
 
 	process (v: JSON_VISITOR)

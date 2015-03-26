@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {JSON_ARRAY}."
-	author: ""
+	description: "object representing a JSON array"
+	author: "Tobias Kaiser"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -26,7 +26,7 @@ feature
 
 	value: LINKED_LIST [G]
 
-feature
+feature {JSON_VISITOR}
 	-- visit
 
 	process (v: JSON_VISITOR)

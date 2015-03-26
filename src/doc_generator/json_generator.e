@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {JSON_GENERATOR}."
+	description: "Generates a JSON object from a swagger object."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -12,10 +12,13 @@ inherit
 	SWAGGER_VISITOR
 
 feature {NONE}
+	-- helper features
 
 	intermediate_result: JSON_VALUE_OBJECT
+		-- result created by the different visits
 
 	create_json_string_array (list: detachable LIST [STRING]): detachable JSON_ARRAY [JSON_VALUE_OBJECT]
+		-- creates a json array with items of type STRING from a list
 		do
 			if attached list as l then
 				create result.make
@@ -28,6 +31,7 @@ feature {NONE}
 		end
 
 	create_json_object_array (list: detachable LIST [SWAGGER_API_OBJECT]): detachable JSON_ARRAY [JSON_VALUE_OBJECT]
+		-- creates a json array of objects defined in a list
 		do
 			if attached list as l then
 				create Result.make
@@ -41,6 +45,7 @@ feature {NONE}
 		end
 
 	create_json_object_from_hashtable (table: detachable HASH_TABLE [SWAGGER_API_OBJECT, STRING]): detachable JSON_OBJECT
+		-- creates a json object, from a hashtable, that stores the field names as keys and their values as objects
 		do
 			if attached table as hash_table then
 				create result.make
@@ -54,6 +59,7 @@ feature {NONE}
 		end
 
 	create_json_object (object: detachable SWAGGER_API_OBJECT): detachable JSON_VALUE_OBJECT
+		-- creates a json object from a swagger api object
 		do
 			if attached object as o then
 				o.process (current)
@@ -65,14 +71,18 @@ feature
 	-- access
 
 	swagger_json_object: JSON_OBJECT
+		-- the created JSON object
 
 	create_json(w_o: SWAGGER_OBJECT)
+		-- creates a json object structure from a swagge object
+		-- can be used to turn into a json file, which can be used to generate
+		-- a swagger documentation
 		do
 			w_o.process (current)
 		end
 
 feature {SWAGGER_API_OBJECT}
-	--visitor
+	--visitor implementation
 
 	process_contact_object (w_o: CONTACT_OBJECT)
 			-- process an object of type CONTACT_OBJECT

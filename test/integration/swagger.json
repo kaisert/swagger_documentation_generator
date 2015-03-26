@@ -18,51 +18,12 @@
       "get":{
         "responses":{
           "400":{
-            "description":"blubb",
-            "schema":{
-              "$ref":"#\/definitions\/Pet"
-            }
+            "description":"blubb"
           }
         },
-        "tags":[
-"tag1",
-"tag2"
-        ],
         "summary":"this is a summary",
         "description":"description",
         "operationId":"my first operation",
-        "consumes":[
-"text\/xml",
-"text\/json"
-        ],
-        "produces":[
-"image"
-        ],
-        "deprecated":false
-      },
-      "put":{
-        "responses":{
-          "400":{
-            "description":"blubb",
-            "schema":{
-              "$ref":"#\/definitions\/Pet"
-            }
-          }
-        },
-        "tags":[
-"tag1",
-"tag2"
-        ],
-        "summary":"this is a summary",
-        "description":"description",
-        "operationId":"my first operation",
-        "consumes":[
-"text\/xml",
-"text\/json"
-        ],
-        "produces":[
-"image"
-        ],
         "deprecated":false,
         "parameters":[
 {
@@ -76,121 +37,6 @@
           }
         ]
       }
-    },
-    "\/test_base_path2\/blubb":{
-      "get":{
-        "responses":{
-          "400":{
-            "description":"blubb",
-            "schema":{
-              "$ref":"#\/definitions\/Pet"
-            }
-          }
-        },
-        "tags":[
-"tag1",
-"tag2"
-        ],
-        "summary":"this is a summary",
-        "description":"description",
-        "operationId":"my first operation",
-        "consumes":[
-"text\/xml",
-"text\/json"
-        ],
-        "produces":[
-"image"
-        ],
-        "deprecated":false,
-        "parameters":[
-{
-            "name":"body",
-            "in":"body",
-            "required":false,
-            "schema":{
-              "$ref":"#\/definitions\/Pet"
-            },
-            "description":"first parameter"
-          }
-        ]
-      },
-      "put":{
-        "responses":{
-          "400":{
-            "description":"blubb",
-            "schema":{
-              "$ref":"#\/definitions\/Pet"
-            }
-          }
-        },
-        "tags":[
-"tag1",
-"tag2"
-        ],
-        "summary":"this is a summary",
-        "description":"description",
-        "operationId":"my first operation",
-        "consumes":[
-"text\/xml",
-"text\/json"
-        ],
-        "produces":[
-"image"
-        ],
-        "deprecated":false
-      }
-    },
-    "\/subfolder\/path3\/foo3":{
-      "post":{
-        "responses":{
-          "400":{
-            "description":"blubb",
-            "schema":{
-              "$ref":"#\/definitions\/Pet"
-            }
-          }
-        },
-        "tags":[
-"foo_tag3.2",
-"bar_tag3.2"
-        ],
-        "summary":"this is a summary",
-        "description":"description",
-        "operationId":"my first operation",
-        "consumes":[
-"text\/xml",
-"text\/json"
-        ],
-        "produces":[
-"image"
-        ],
-        "deprecated":false
-      },
-      "delete":{
-        "responses":{
-          "400":{
-            "description":"blubb",
-            "schema":{
-              "$ref":"#\/definitions\/Pet"
-            }
-          }
-        },
-        "tags":[
-"foo_tag3",
-"bar_tag3"
-        ],
-        "summary":"this is a summary",
-        "description":"description",
-        "operationId":"my first operation",
-        "consumes":[
-"text\/xml",
-"text\/json"
-        ],
-        "produces":[
-"image"
-        ],
-        "deprecated":false
-      }
     }
   },
   "host":"www.domain.com",
@@ -201,7 +47,7 @@
   "produces":[
 "text"
   ],
-  "parameter":{
+  "parameters":{
     "\/test_base_path2\/blubb":{
       "name":"base_parameter",
       "in":"body",
@@ -211,5 +57,24 @@
       },
       "description":"first parameter"
     }
-  }
+  },
+  "securityDefinitions":{
+    "this is a name":{
+      "type":"blubb",
+      "name":"this is a name",
+      "in":"query",
+      "flow":"implicit",
+      "authorizationUrl":"http:\/\/www.foo.com",
+      "tokenUrl":"http:\/\/www.bar.com",
+      "description":"this is a description"
+    }
+  },
+  "tags":[
+{
+      "name":"asdf"
+    },
+{
+      "name":"newTag"
+    }
+  ]
 }

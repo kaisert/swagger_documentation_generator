@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {JSON_INTEGER}."
-	author: ""
+	description: "Object representing a json integer"
+	author: "Tobias Kaiser"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -15,6 +15,7 @@ create
 	make
 
 feature
+	-- access
 
 	make (a_value: INTEGER)
 		do
@@ -23,7 +24,7 @@ feature
 
 	value: INTEGER
 
-feature
+feature {JSON_VISITOR}
 	--visit
 
 	process (v: JSON_VISITOR)

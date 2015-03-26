@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {JSON_WRITER}."
+	description: "Writes a JSON object into a *.json file"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,13 +17,16 @@ create
 feature {NONE}
 
 	json_output_file: PLAIN_TEXT_FILE
+			-- the output json file
 
-	intent: STRING
+	indent: STRING
+			-- current indentation while file write
 
 feature {NONE}
-	-- procedures
+	-- helper features
 
 	output (text: STRING)
+			-- outputs text to the json file
 		require
 			json_output_file.is_open_write
 			text /= void
@@ -36,9 +39,9 @@ feature {NONE}
 		end
 
 	i_output (text: STRING)
-			-- writes a string into the json file
+			-- writes a string into the json file with indentation
 		do
-			output (intent + text)
+			output (indent + text)
 		end
 
 	output_nl
@@ -52,25 +55,28 @@ feature
 
 	make
 		do
-			intent := ""
+			indent := ""
 		end
 
-	add_intent
+	add_indent
+			-- adds indentation
 		do
-			intent := intent + "  "
+			indent := indent + "  "
 		end
 
-	remove_intent
+	remove_indent
+			-- removes indentation
 		do
-			intent.remove_tail (2)
+			indent.remove_tail (2)
 		end
 
 feature
 	--access
 
-	create_file (json: JSON_OBJECT)
+	create_file (file_name: STRING; json: JSON_OBJECT)
+			-- creates a *.json file from a json object
 		do
-			create json_output_file.make_open_write ("swagger.json")
+			create json_output_file.make_open_write (file_name + ".json")
 			json.process (current)
 			json_output_file.close
 		end
@@ -80,19 +86,20 @@ feature {JSON_VALUE_OBJECT}
 
 	process_json_array (json: JSON_ARRAY [JSON_VALUE_OBJECT])
 		do
-			output("["); output_nl
-			add_intent
+			output ("[");
+			output_nl
+			add_indent
 			across
 				json.value as values
 			loop
 				values.item.process (current)
 				if not values.is_last then
-					output(",")
+					output (",")
 				end
 				output_nl
 			end
-			remove_intent
-			i_output("]")
+			remove_indent
+			i_output ("]")
 		end
 
 	process_json_integer (json: JSON_INTEGER)
@@ -102,20 +109,21 @@ feature {JSON_VALUE_OBJECT}
 
 	process_json_object (json: JSON_OBJECT)
 		do
-			output("{"); output_nl
-			add_intent
+			output ("{");
+			output_nl
+			add_indent
 			across
 				json.values as values
 			loop
-				i_output("%"" + values.key + "%":")
+				i_output ("%"" + values.key + "%":")
 				values.item.process (current)
 				if not values.is_last then
-					output(",")
+					output (",")
 				end
 				output_nl
 			end
-			remove_intent
-			i_output("}")
+			remove_indent
+			i_output ("}")
 		end
 
 	process_json_real (json: JSON_REAL)
