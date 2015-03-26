@@ -18,14 +18,37 @@
       "get":{
         "responses":{
           "400":{
-            "description":"blubb"
+            "description":"blubb",
+            "schema":{
+              "$ref":"#\/definitions\/Pet"
+            }
           }
         },
+        "tags":[
+"tag1",
+"tag2"
+        ],
         "summary":"this is a summary",
         "description":"description",
         "operationId":"my first operation",
+        "consumes":[
+"text\/xml",
+"text\/json"
+        ],
+        "produces":[
+"image"
+        ],
         "deprecated":false,
         "parameters":[
+{
+            "name":"body",
+            "in":"body",
+            "required":false,
+            "schema":{
+              "$ref":"#\/definitions\/Pet"
+            },
+            "description":"first parameter"
+          },
 {
             "name":"base_parameter",
             "in":"body",

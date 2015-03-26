@@ -248,22 +248,22 @@ feature {AST_EIFFEL}
 					known_headers.extend (header.h, header.s)
 				elseif tag.same_string ("sa_operation") then
 					extract_operation (l_as)
-				elseif tag.same_string ("sa_operation_tags") then
+				elseif tag.same_string ("sa_tags") then
 					if not attached current_tags then
 						create current_tags.make
 					end
 					extract_list (l_as, current_tags)
-				elseif tag.same_string ("sa_operation_consumes") then
+				elseif tag.same_string ("sa_consumes") then
 					if not attached current_consumes then
 						create current_consumes.make
 					end
 					extract_list (l_as, current_consumes)
-				elseif tag.same_string ("sa_operation_produces") then
+				elseif tag.same_string ("sa_produces") then
 					if not attached current_produces then
 						create current_produces.make
 					end
 					extract_list (l_as, current_produces)
-				elseif tag.same_string ("sa_operation_schemes") then
+				elseif tag.same_string ("sa_schemes") then
 					if not attached current_schemes then
 						create current_schemes.make
 					end

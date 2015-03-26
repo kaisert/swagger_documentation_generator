@@ -282,7 +282,7 @@ feature {AST_EIFFEL}
 			elseif annotation.same_string ("sa_scope") then
 				scopes := extract_scopes (l_as)
 				known_scopes.extend (scopes.so, scopes.s)
-			elseif annotation.same_string ("sa_security_requirement") then
+			elseif annotation.same_string ("sa_security") then
 				if not attached swagger_object.security_requirements then
 					swagger_object.set_security (create {LINKED_LIST [SECURITY_REQUIREMENT_OBJECT]}.make)
 				end
